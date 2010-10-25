@@ -4,6 +4,13 @@ Quite simply a localStorage adapter for Backbone. It's a drop-in replacement for
 
 ## Usage
 
+1. Include Backbone.localStorage after having included Backbone.js:
+
+    <script type="text/javascript" src="backbone.js"></script>
+    <script type="text/javascript" src="backbone.localStorage.js"></script>
+
+2. Create your collections like so:
+
     window.SomeCollection = Backbone.Collection.Extend({
       
       localStore: new Store("SomeCollection"); // Unique name within your app.
