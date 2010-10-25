@@ -18,6 +18,7 @@ Create your collections like so:
       // New since Backbone.js 0.2
       // The Store provides a JSON reponse like so:
       // {models: [the models], status: "success or error string"}
+      
       parse: function(resp) {
         return resp.models;
       },
@@ -30,6 +31,7 @@ Add a "parse" function to your models:
 
     // The Store provides a JSON reponse like so:
     // {models: model_data, status: "success or error string"}
+    
     parse: function(resp) {
       return resp.model;
     }
