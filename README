@@ -1,0 +1,15 @@
+# Backbone.localStorage
+
+Quite simply a localStorage adapter for Backbone. It's a drop-in replacement for Backbone.Sync() to handle saving to a localStorage database.
+
+## Usage
+
+    window.SomeCollection = Backbone.Collection.Extend({
+      
+      localStore: new Store("SomeCollection"); // Unique name within your app.
+      
+      // ... everything else is normal.
+      
+    });
+    
+Feel free to use Backbone as you usually would, this is a drop-in replacement.
