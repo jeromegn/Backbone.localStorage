@@ -1,153 +1,84 @@
-// UUID
+// A simple module to replace `Backbone.sync` with *localStorage*-based
+// persistence. Models are given GUIDS, and saved into a JSON object. Simple
+// as that.
+
+// Generate four random hex digits.
 function S4() {
    return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
 };
 
+// Generate a pseudo-GUID by concatenating random hexadecimal.
 function guid() {
    return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
 };
 
-Storage.prototype.setObject = function(key, value) {
-  this.setItem(key, JSON.stringify(value));
-}
-
-Storage.prototype.getObject = function(key) {
-  return this.getItem(key) && JSON.parse(this.getItem(key));
-}
-
+// Our Store is represented by a single JS object in *localStorage*. Create it
+// with a meaningful name, like the name you'd give a table.
 var Store = function(name) {
   this.name = name;
+  var store = localStorage.getItem(this.name);
+  this.data = (store && JSON.parse(store)) || {};
 };
 
 _.extend(Store.prototype, {
-  
+
+  // Save the current state of the **Store** to *localStorage*.
+  save: function() {
+    localStorage.setItem(this.name, JSON.stringify(this.data));
+  },
+
+  // Add a model, giving it a (hopefully)-unique GUID, if it doesn't already
+  // have an id of it's own.
   create: function(model) {
-    this.data = localStorage.getObject(this.name);
-
-    if (!this.data) {
-      this.data = [];
-    }
-
-    if (!model.id) model.attributes.id = guid();
-    
-    this.data.push(model);
-
-    localStorage.setObject(this.name, this.data);
-
-    return {model: model, status: "success"};
+    if (!model.id) model.id = model.attributes.id = guid();
+    this.data[model.id] = model;
+    this.save();
+    return model;
   },
-  
+
+  // Update a model by replacing its copy in `this.data`.
   update: function(model) {
-    var newData = [];
-    var succeeded = false;
-
-    this.data = localStorage.getObject(this.name);
-
-    if (!this.data) {
-      this.data = [];
-    }
-
-    newData = _.map(this.data, function(i) {
-      if (i.id == model.id) {
-        succeeded = true;
-        return model
-      } else {
-        return i
-      }
-    });
-    
-    if (!succeeded) {
-      this.create(model)
-    } else {
-      localStorage.setObject(this.name, newData);
-    }
-
-    return {model: model, status: "success"};
+    this.data[model.id] = model;
+    this.save();
+    return model;
   },
-  
+
+  // Retrieve a model from `this.data` by id.
   find: function(model) {
-    var record;
-
-    this.data = localStorage.getObject(this.name);
-
-    if (!this.data) {
-      this.data = [];
-    }
-
-    _.each(this.data, function(item) {
-      if (item.id == model.id) {
-        record = item;
-        _.breakLoop();
-      }
-    });
-
-    if (typeof(record) == 'object') {
-      return {model: record, status: "success"};
-    } else {
-      return {error: "Record Not Found.", status: "error"};
-    }
+    return this.data[model.id];
   },
-  
+
+  // Return the array of all models currently in storage.
   findAll: function() {
-    this.data = localStorage.getObject(this.name);
-    
-    if (!this.data) {
-      this.data = [];
-    }
-    
-    return {models: this.data, status: "success"};
+    return _.values(this.data);
   },
-  
+
+  // Delete a model from `this.data`, returning it.
   destroy: function(model) {
-    var newData = [];
-    var recordKey;
-    var succeeded = false;
-
-    this.data = localStorage.getObject(this.name);
-
-    if (!this.data) {
-      this.data = [];
-    }
-
-    _.each(this.data, function(item, key) {
-      if (item.id == model.id) {
-        succeeded = true;
-        recordKey = key;
-        _.breakLoop();
-      }
-    });
-    
-    if (succeeded) this.data.splice(recordKey, 1);
-
-    localStorage.setObject(this.name, this.data);
-
-    if (succeeded) {
-      return {model: model, status: "success"};
-    } else {
-      return {error: "Record Not Found.", status: "error"}
-    }
+    delete this.data[model.id];
+    this.save();
+    return model;
   }
-  
+
 });
 
+// Override `Backbone.sync` to use delegate to the model or collection's
+// *localStorage* property, which should be an instance of `Store`.
 Backbone.sync = function(method, model, success, error) {
-  
+
   var resp;
-  var store = model.localStore ? model.localStore : model.collection.localStore;
-  
-  if (method === "read") {
-    resp = model.id ? store.find(model) : store.findAll();
-  } else if (method === "create") {
-    resp = store.create(model);
-  } else if (method === "update") {
-    resp = store.update(model);
-  } else if (method === "delete") {
-    resp = store.destroy(model);
+  var store = model.localStorage || model.collection.localStorage;
+
+  switch (method) {
+    case "read":    resp = model.id ? store.find(model) : store.findAll(); break;
+    case "create":  resp = store.create(model);                            break;
+    case "update":  resp = store.update(model);                            break;
+    case "delete":  resp = store.destroy(model);                           break;
   }
-  
-  if (resp.status == "success") {
+
+  if (resp) {
     success(resp);
-  } else if (resp.status == "error" && error) {
-    error(resp);
+  } else {
+    error("Record not found");
   }
 };
