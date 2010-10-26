@@ -20,3 +20,7 @@ Create your collections like so:
     });
   
 Feel free to use Backbone as you usually would, this is a drop-in replacement.
+
+## Credits
+
+Thanks a lot to Jeremy Ashkenas who refactored pretty much the whole code.
