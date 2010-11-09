@@ -32,7 +32,7 @@ _.extend(Store.prototype, {
   create: function(model) {
     if (!model.id) model.id = model.attributes.id = guid();
     localStorage.setItem(this.name+"-"+model.id, JSON.stringify(model));
-    this.records.push(model.id);
+    this.records.push(model.id.toString());
     this.save();
     return model;
   },
@@ -40,7 +40,7 @@ _.extend(Store.prototype, {
   // Update a model by replacing its copy in `this.data`.
   update: function(model) {
     localStorage.setItem(this.name+"-"+model.id, JSON.stringify(model));
-    if (!_.include(this.records, model.id)) this.records.push(model.id); this.save();
+    if (!_.include(this.records, model.id.toString())) this.records.push(model.id.toString()); this.save();
     return model;
   },
 
@@ -57,7 +57,7 @@ _.extend(Store.prototype, {
   // Delete a model from `this.data`, returning it.
   destroy: function(model) {
     localStorage.removeItem(this.name+"-"+model.id);
-    this.records = _.reject(this.records, function(record_id){return record_id == model.id;});
+    this.records = _.reject(this.records, function(record_id){return record_id == model.id.toString();});
     this.save();
     return model;
   }
