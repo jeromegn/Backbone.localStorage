@@ -11,7 +11,7 @@ Include Backbone.localStorage after having included Backbone.js:
 
 Create your collections like so:
 
-    window.SomeCollection = Backbone.Collection.Extend({
+    window.SomeCollection = Backbone.Collection.extend({
       
       localStorage: new Store("SomeCollection"), // Unique name within your app.
       
