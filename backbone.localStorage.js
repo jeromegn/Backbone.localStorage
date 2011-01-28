@@ -64,9 +64,10 @@ _.extend(Store.prototype, {
 
 });
 
-// Override `Backbone.sync` to use delegate to the model or collection's
+// Create a `Backbone.localSync` to use delegate to the model or collection's
+// We can then set MyBackBoneModel.sync = Backbone.localSync to use local storage with that model
 // *localStorage* property, which should be an instance of `Store`.
-Backbone.sync = function(method, model, options) {
+Backbone.localSync = function(method, model, options) {
 
   var resp;
   var store = model.localStorage || model.collection.localStorage;
