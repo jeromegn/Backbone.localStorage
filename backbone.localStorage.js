@@ -20,6 +20,14 @@ window.Store = function(name) {
   this.records = (store && store.split(",")) || [];
 };
 
+// Require Underscore, if we're using CommonJS, and it's not already present.
+var _ = this._;
+if (!_ && (typeof require !== 'undefined')) _ = require("underscore")._;
+
+// Require Backbone, if we're using CommonJS, and it's not already present.
+var Backbone = this.Backbone;
+if (!Backbone && (typeof require !== 'undefined')) Backbone = require("backbone");
+
 _.extend(Store.prototype, {
 
   // Save the current state of the **Store** to *localStorage*.
