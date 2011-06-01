@@ -27,7 +27,15 @@ $(document).ready(function() {
     equals(library.first().get('author'), 'Bill Shakespeare');
     equals(library.first().get('length'), 123);
   });
-
+  
+  test("collection update", function() {
+        library.first().save({id: '1-the-tempest', author: 'William Shakespeare'});
+        equals(library.first().get('id'), '1-the-tempest');
+        equals(library.first().get('title'), 'The Tempest');
+        equals(library.first().get('author'), 'William Shakespeare');
+        equals(library.first().get('length'), 123);
+  });
+ 
   test("collection destroy", function() {
     library.first().destroy();
     equals(library.length, 0);
