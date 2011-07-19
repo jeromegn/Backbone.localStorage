@@ -64,9 +64,9 @@ _.extend(Store.prototype, {
 
 });
 
-// Override `Backbone.sync` to use delegate to the model or collection's
+// localSync delegate to the model or collection's
 // *localStorage* property, which should be an instance of `Store`.
-Backbone.sync = function(method, model, options, error) {
+Backbone.localSync = function(method, model, options, error) {
 
   // Backwards compatibility with Backbone <= 0.3.3
   if (typeof options == 'function') {
@@ -92,3 +92,8 @@ Backbone.sync = function(method, model, options, error) {
     options.error("Record not found");
   }
 };
+
+// Override 'Backbone.sync' to default to localSync, 
+// the original 'Backbone.sync' is still available in 'Backbone.ajaxSync'
+Backbone.ajaxSync = Backbone.sync;
+Backbone.sync = Backbone.localSync;
