@@ -23,4 +23,4 @@ Feel free to use Backbone as you usually would, this is a drop-in replacement.
 
 ## Credits
 
-Thanks a lot to Jeremy Ashkenas who refactored pretty much the whole code.
+Thanks to [Mark Woodall](https://github.com/llad) for the QUnit tests.
