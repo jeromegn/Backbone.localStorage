@@ -47,22 +47,24 @@ $(document).ready(function() {
 
         library.create();
         
+        library.fetch();
+        
+        // Create
+        equals(library.length, 1, 'created model');
+        
         // Set, but don't save
         library.first().set({ 'title': "Wombat's Fun Adventure" });
         equals(library.first().get('title'), "Wombat's Fun Adventure", 'title changed, but not saved');
         
         library.fetch();
-        
-        // Create
-        equals(library.length, 1, 'created model');
 
-        // Read, set title above should be discarded
+        // Read, the unsaved title value above should be discarded
         equals(library.first().get('title'), 'The Tempest', 'title was read');
         equals(library.first().get('author'), 'Bill Shakespeare', 'author was read');
         equals(library.first().get('length'), 123, 'length was read');
 
         // Update
-        library.first().save({ author: 'William Shakespeare'});
+        library.first().save({ author: 'William Shakespeare' });
                 
         // Fetch to make sure new values persisted
         library.fetch();
@@ -71,9 +73,27 @@ $(document).ready(function() {
         equals(library.first().get('title'), 'The Tempest', 'verify title is still there');
         equals(library.first().get('length'), 123, 'verify length is still there');
         
+        // Test creating a new model from the old one by changing the ID attribute
+        library.first().save({ id: '1-tempest', author: 'Ghostwriter' });
+        
+        library.fetch();
+        
+        equals(library.get('1-tempest').get('author'), 'Ghostwriter', 'created new model from old by changing ID');
+        equals(library.first().get('author'), 'William Shakespeare', 'original model has original author');
+        
+        // Clone the models array before iterating so backbone doesn't get confused
+        _.clone(library.models).forEach(function(model) {
+            console.log('deleting model ' + model.get('id'));
+            model.destroy();
+        });
+        
+        library.each(function(item) {
+            item.bind('destroy', console.log, item);
+        });
+        
         // Delete
-        library.each(function(book) {
-            book.destroy();
+        library.forEach(function(item) {
+            item.destroy();
         });
 
         library.fetch();
