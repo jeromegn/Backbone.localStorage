@@ -51,6 +51,12 @@ $(document).ready(function() {
         equals(library.length, 0, 'item was destroyed and library is empty');
     });
     
+    test("should not load items from localstorage if they are not there anymore", function() {
+        library.create(attrs);
+        localStorage.clear();
+        library.fetch();
+        equals(0, library.length);
+    });
         
     });
 /*
