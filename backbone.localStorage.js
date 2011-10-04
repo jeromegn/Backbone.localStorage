@@ -22,13 +22,14 @@ function guid() {
 
 // Our Store is represented by a single JS object in *localStorage*. Create it
 // with a meaningful name, like the name you'd give a table.
-window.Store = function(name) {
+// window.Store is deprectated, use Backbone.LocalStorage instead
+Backbone.LocalStorage = window.Store = function(name) {
   this.name = name;
   var store = localStorage.getItem(this.name);
   this.records = (store && store.split(",")) || [];
 };
 
-_.extend(Store.prototype, {
+_.extend(Backbone.LocalStorage.prototype, {
 
   // Save the current state of the **Store** to *localStorage*.
   save: function() {
@@ -77,7 +78,8 @@ _.extend(Store.prototype, {
 
 // Override `Backbone.sync` to use delegate to the model or collection's
 // *localStorage* property, which should be an instance of `Store`.
-window.Store.sync = Backbone.sync = function(method, model, options, error) {
+// window.Store.sync is deprectated, use Backbone.LocalStorage.sync instead
+Backbone.LocalStorage.sync = window.Store.sync = Backbone.sync = function(method, model, options, error) {
 
   // Backwards compatibility with Backbone <= 0.3.3
   if (typeof options == 'function') {
