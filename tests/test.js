@@ -66,4 +66,18 @@ $(document).ready(function() {
         equals(1, secondLibrary.length);
     });
     
+    test("should cope with arbitrary idAttributes", function() {
+        var Model = Backbone.Model.extend({
+            idAttribute: '_id'
+        });
+        var Collection = Backbone.Collection.extend({
+            model: Model,
+            localStorage: new Store('strangeID')
+        });
+        
+        var collection = new Collection();
+        collection.create({});
+        equals(collection.first().id, collection.first().get('_id'));
+    });
+    
 });
