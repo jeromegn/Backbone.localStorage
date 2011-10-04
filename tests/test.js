@@ -57,8 +57,15 @@ $(document).ready(function() {
         library.fetch();
         equals(0, library.length);
     });
+    
+    test("should load from session store without server request", function() {
+        library.create(attrs);
         
+        secondLibrary = new Library();
+        secondLibrary.fetch();
+        equals(1, secondLibrary.length);
     });
+    
 /*
 
   test("sync: update", function() {
