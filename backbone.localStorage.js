@@ -1,3 +1,4 @@
+(function() {
 /**
  * Backbone localStorage Adapter v1.0
  * https://github.com/jeromegn/Backbone.localStorage
@@ -102,3 +103,4 @@ window.Store.sync = Backbone.sync = function(method, model, options, error) {
     options.error("Record not found");
   }
 };
+})();
