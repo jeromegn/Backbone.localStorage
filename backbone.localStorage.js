@@ -28,7 +28,7 @@ window.Store = function(name) {
 
 _.extend(Store.prototype, {
 
-  // No-op: localStorage is updated in create, update, and destroy
+  // No-op: localStorage is immediately updated in create, update, and destroy
   save: function() {
   },
 
@@ -40,7 +40,6 @@ _.extend(Store.prototype, {
     }
     localStorage.setItem(this.name+"-"+model.id, JSON.stringify(model));
     this.ids(this.ids().concat(model.id.toString()));
-    this.save();
     return model;
   },
 
@@ -50,7 +49,6 @@ _.extend(Store.prototype, {
     if (!_.include(this.ids(), model.id.toString())) {
       this.ids(this.ids().concat(model.id.toString()));
     }
-    this.save();
     return model;
   },
 
@@ -70,7 +68,6 @@ _.extend(Store.prototype, {
   destroy: function(model) {
     localStorage.removeItem(this.name+"-"+model.id);
     this.ids(_.without(this.ids(), model.id.toString()));
-    this.save();
     return model;
   },
 
