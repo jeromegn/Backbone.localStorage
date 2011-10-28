@@ -1,5 +1,5 @@
 /**
- * Backbone localStorage Adapter v1.0
+ * Backbone localStorage Adapter v1.1
  * https://github.com/jeromegn/Backbone.localStorage
  *
  * Date: Sun Aug 14 2011 09:53:55 -0400
@@ -24,16 +24,12 @@ function guid() {
 // with a meaningful name, like the name you'd give a table.
 window.Store = function(name) {
   this.name = name;
-  var store = localStorage.getItem(this.name);
-  this.ids = (store && store.split(",")) || [];
 };
 
 _.extend(Store.prototype, {
 
-  // Save the IDs of the models to *localStorage*.
-  // (Call Store.update(model) to save the model to localStorage.)
+  // No-op: localStorage is updated in create, update, and destroy
   save: function() {
-    localStorage.setItem(this.name, this.ids.join(","));
   },
 
   // Add a model, giving it a (hopefully)-unique GUID, if it doesn't already
@@ -43,7 +39,7 @@ _.extend(Store.prototype, {
       model.id = model.attributes.id = guid();
     }
     localStorage.setItem(this.name+"-"+model.id, JSON.stringify(model));
-    this.ids.push(model.id.toString());
+    this.ids(this.ids().concat(model.id.toString()));
     this.save();
     return model;
   },
@@ -51,8 +47,8 @@ _.extend(Store.prototype, {
   // Update a model by replacing its copy in *localStorage*.
   update: function(model) {
     localStorage.setItem(this.name+"-"+model.id, JSON.stringify(model));
-    if (!_.include(this.ids, model.id.toString())) {
-      this.ids.push(model.id.toString());
+    if (!_.include(this.ids(), model.id.toString())) {
+      this.ids(this.ids().concat(model.id.toString()));
     }
     this.save();
     return model;
@@ -65,7 +61,7 @@ _.extend(Store.prototype, {
 
   // Return the array of all models currently in storage.
   findAll: function() {
-    return _.map(this.ids, function(id) {
+    return _.map(this.ids(), function(id) {
       return JSON.parse(localStorage.getItem(this.name+"-"+id));
     }, this);
   },
@@ -73,11 +69,19 @@ _.extend(Store.prototype, {
   // Delete a model from *localStorage*, returning it.
   destroy: function(model) {
     localStorage.removeItem(this.name+"-"+model.id);
-    this.ids = _.reject(this.ids, function(id) {
-      return id == model.id.toString();
-    });
+    this.ids(_.without(this.ids(), model.id.toString()));
     this.save();
     return model;
+  },
+
+  // Getter and setter for the list of model IDs in storage.
+  ids: function (ids) {
+    if (ids) {
+      localStorage.setItem(this.name, ids.join(","));
+      return ids;
+    }
+    var storedIDs = localStorage.getItem(this.name);
+    return (storedIDs && storedIDs.split(",")) || [];
   }
 
 });
