@@ -8,8 +8,7 @@
 // persistence. Models are given GUIDS, and saved into a JSON object. Simple
 // as that.
 
-define(['underscore', 'backbone'],
-function(_, Backbone) {
+(function() {
 
 	root = this;
 
@@ -124,4 +123,4 @@ function(_, Backbone) {
 	};
 
 	return Store;
-});
+})();
