@@ -11,12 +11,22 @@
 
 // Generate four random hex digits.
 function S4() {
-   return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+  return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
 }
 
 // Generate a pseudo-GUID by concatenating random hexadecimal.
 function guid() {
-   return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
+  return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
+}
+
+// Getter and setter for the list of model IDs in storage.
+function getIds(name) {
+  var storedIDs = localStorage.getItem(name);
+  return (storedIDs && storedIDs.split(",")) || [];
+}
+function setIds(name, ids) {
+  localStorage.setItem(name, (ids || []).join(","));
+  return ids;
 }
 
 // Our Store is represented by a list of model IDs, and the stringified
@@ -39,15 +49,15 @@ _.extend(Store.prototype, {
       model.id = model.attributes.id = guid();
     }
     localStorage.setItem(this.name+"-"+model.id, JSON.stringify(model));
-    this.ids(this.ids().concat(model.id.toString()));
+    setIds(this.name, getIds(this.name).concat(model.id.toString()));
     return model;
   },
 
   // Update a model by replacing its copy in *localStorage*.
   update: function(model) {
     localStorage.setItem(this.name+"-"+model.id, JSON.stringify(model));
-    if (!_.include(this.ids(), model.id.toString())) {
-      this.ids(this.ids().concat(model.id.toString()));
+    if (!_.include(getIds(this.name), model.id.toString())) {
+      setIds(this.name, getIds(this.name).concat(model.id.toString()));
     }
     return model;
   },
@@ -59,7 +69,7 @@ _.extend(Store.prototype, {
 
   // Return the array of all models currently in storage.
   findAll: function() {
-    return _.map(this.ids(), function(id) {
+    return _.map(getIds(this.name), function(id) {
       return JSON.parse(localStorage.getItem(this.name+"-"+id));
     }, this);
   },
@@ -67,18 +77,8 @@ _.extend(Store.prototype, {
   // Delete a model from *localStorage*, returning it.
   destroy: function(model) {
     localStorage.removeItem(this.name+"-"+model.id);
-    this.ids(_.without(this.ids(), model.id.toString()));
+    setIds(this.name, _.without(getIds(this.name), model.id.toString()));
     return model;
-  },
-
-  // Getter and setter for the list of model IDs in storage.
-  ids: function (ids) {
-    if (ids) {
-      localStorage.setItem(this.name, ids.join(","));
-      return ids;
-    }
-    var storedIDs = localStorage.getItem(this.name);
-    return (storedIDs && storedIDs.split(",")) || [];
   }
 
 });
