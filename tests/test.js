@@ -1,19 +1,28 @@
 $(document).ready(function() {
     module("localStorage");
 
+    var Book = Backbone.Model.extend({
+    });
+
+    var store1 = new window.Store('libraryStore');
+    var store2 = new window.Store('libraryStore');
+
     var Library = Backbone.Collection.extend({
-        localStorage: new window.Store("libraryStore")
-        
-        // is the problem with my library that is has no model reference?
+        localStorage: store1,
+        model: Book
     });
 
     var library = new Library();
+    var library2 = new Library();
+    library2.localStorage = store2;
 
     var attrs = {
         title  : 'The Tempest',
         author : 'Bill Shakespeare',
         length : 123
     };
+
+    var book = new Book(attrs);
     
     // Make sure there is no library collection when we start
     
@@ -48,89 +57,25 @@ $(document).ready(function() {
             book.destroy();
         });
         equals(library.length, 0, 'item was destroyed and library is empty');
-        
+
+        equals(store1 === store2, false, 'different Store instances');
+        store1.create(book);
+        equals(JSON.stringify(store2.find(book)), JSON.stringify(book), 'item added to one instance of Store is found in all instances');
+
+        killStorage('libraryStore');
+
+        library.create(attrs);
+        equals(library.length, 1, 'one item added');
+        library2.fetch();
+        equals(library2.length, 1, 'item added elsewhere is fetched here');
+        equals(JSON.stringify(library.first()), JSON.stringify(library2.first()), 'different libraries have the same data');
+
+        library2.first().save({author: 'William Shakespeare'});
+        library.fetch();
+        equals(library.first().get('author'), 'William Shakespeare', 'model updates across different libraries with the same store');
+
+        library2.first().destroy();
+        library.fetch();
+        equals(library.length, 0, 'item destroyed elsewhere is gone from here');
     });
-
-/*
-
-  test("sync: update", function() {
-    library.first().save({id: '1-the-tempest', author: 'William Shakespeare'});
-    equals(lastRequest.url, '/library/1-the-tempest');
-    equals(lastRequest.type, 'PUT');
-    equals(lastRequest.dataType, 'json');
-    var data = JSON.parse(lastRequest.data);
-    equals(data.id, '1-the-tempest');
-    equals(data.title, 'The Tempest');
-    equals(data.author, 'William Shakespeare');
-    equals(data.length, 123);
-  });
-
-  test("sync: update with emulateHTTP and emulateJSON", function() {
-    Backbone.emulateHTTP = Backbone.emulateJSON = true;
-    library.first().save({id: '2-the-tempest', author: 'Tim Shakespeare'});
-    equals(lastRequest.url, '/library/2-the-tempest');
-    equals(lastRequest.type, 'POST');
-    equals(lastRequest.dataType, 'json');
-    equals(lastRequest.data._method, 'PUT');
-    var data = JSON.parse(lastRequest.data.model);
-    equals(data.id, '2-the-tempest');
-    equals(data.author, 'Tim Shakespeare');
-    equals(data.length, 123);
-    Backbone.emulateHTTP = Backbone.emulateJSON = false;
-  });
-
-  test("sync: update with just emulateHTTP", function() {
-    Backbone.emulateHTTP = true;
-    library.first().save({id: '2-the-tempest', author: 'Tim Shakespeare'});
-    equals(lastRequest.url, '/library/2-the-tempest');
-    equals(lastRequest.type, 'POST');
-    equals(lastRequest.contentType, 'application/json');
-    var data = JSON.parse(lastRequest.data);
-    equals(data.id, '2-the-tempest');
-    equals(data.author, 'Tim Shakespeare');
-    equals(data.length, 123);
-    Backbone.emulateHTTP = false;
-  });
-
-  test("sync: update with just emulateJSON", function() {
-    Backbone.emulateJSON = true;
-    library.first().save({id: '2-the-tempest', author: 'Tim Shakespeare'});
-    equals(lastRequest.url, '/library/2-the-tempest');
-    equals(lastRequest.type, 'PUT');
-    equals(lastRequest.contentType, 'application/x-www-form-urlencoded');
-    var data = JSON.parse(lastRequest.data.model);
-    equals(data.id, '2-the-tempest');
-    equals(data.author, 'Tim Shakespeare');
-    equals(data.length, 123);
-    Backbone.emulateJSON = false;
-  });
-
-  test("sync: read model", function() {
-    library.first().fetch();
-    equals(lastRequest.url, '/library/2-the-tempest');
-    equals(lastRequest.type, 'GET');
-    ok(_.isEmpty(lastRequest.data));
-  });
-
-
-
-  test("sync: destroy with emulateHTTP", function() {
-    Backbone.emulateHTTP = Backbone.emulateJSON = true;
-    library.first().destroy();
-    equals(lastRequest.url, '/library/2-the-tempest');
-    equals(lastRequest.type, 'POST');
-    equals(JSON.stringify(lastRequest.data), '{"_method":"DELETE"}');
-    Backbone.emulateHTTP = Backbone.emulateJSON = false;
-  });
-
-  test("sync: urlError", function() {
-    model = new Backbone.Model();
-    raises(function() {
-      model.fetch();
-    });
-    model.fetch({url: '/one/two'});
-    equals(lastRequest.url, '/one/two');
-  });
-*/
-
 });
