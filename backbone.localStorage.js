@@ -1,8 +1,6 @@
 /**
  * Backbone localStorage Adapter v1.0
  * https://github.com/jeromegn/Backbone.localStorage
- *
- * Date: Sun Aug 14 2011 09:53:55 -0400
  */
 
 // A simple module to replace `Backbone.sync` with *localStorage*-based
