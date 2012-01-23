@@ -6,18 +6,22 @@ Quite simply a localStorage adapter for Backbone. It's a drop-in replacement for
 
 Include Backbone.localStorage after having included Backbone.js:
 
-    <script type="text/javascript" src="backbone.js"></script>
-    <script type="text/javascript" src="backbone.localStorage.js"></script>
+```html
+<script type="text/javascript" src="backbone.js"></script>
+<script type="text/javascript" src="backbone.localStorage.js"></script>
+```
 
 Create your collections like so:
 
-    window.SomeCollection = Backbone.Collection.extend({
-      
-      localStorage: new Store("SomeCollection"), // Unique name within your app.
-      
-      // ... everything else is normal.
-      
-    });
+```javascript
+window.SomeCollection = Backbone.Collection.extend({
+  
+  localStorage: new Store("SomeCollection"), // Unique name within your app.
+  
+  // ... everything else is normal.
+  
+});
+```
   
 Feel free to use Backbone as you usually would, this is a drop-in replacement.
 
@@ -28,6 +32,8 @@ Thanks to [Mark Woodall](https://github.com/llad) for the QUnit tests.
 ## Licensed
 
 Licensed under MIT license
+
+Copyright (c) 2010 Jerome Gravel-Niquet
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
