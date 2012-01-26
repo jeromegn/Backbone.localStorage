@@ -1,8 +1,6 @@
 /**
  * Backbone localStorage Adapter v1.0
  * https://github.com/jeromegn/Backbone.localStorage
- *
- * Date: Sun Aug 14 2011 09:53:55 -0400
  */
 
 (function() {
@@ -80,10 +78,10 @@ _.extend(Backbone.LocalStorage.prototype, {
 
 });
 
-// Override `Backbone.sync` to use delegate to the model or collection's
+// localSync delegate to the model or collection's
 // *localStorage* property, which should be an instance of `Store`.
 // window.Store.sync is deprectated, use Backbone.LocalStorage.sync instead
-Backbone.LocalStorage.sync = window.Store.sync = Backbone.sync = function(method, model, options, error) {
+Backbone.LocalStorage.sync = window.Store.sync = Backbone.localSync = function(method, model, options, error) {
 
   // Backwards compatibility with Backbone <= 0.3.3
   if (typeof options == 'function') {
@@ -97,7 +95,7 @@ Backbone.LocalStorage.sync = window.Store.sync = Backbone.sync = function(method
   var store = model.localStorage || model.collection.localStorage;
 
   switch (method) {
-    case "read":    resp = model.id ? store.find(model) : store.findAll(); break;
+    case "read":    resp = model.id != undefined ? store.find(model) : store.findAll(); break;
     case "create":  resp = store.create(model);                            break;
     case "update":  resp = store.update(model);                            break;
     case "delete":  resp = store.destroy(model);                           break;
@@ -109,4 +107,8 @@ Backbone.LocalStorage.sync = window.Store.sync = Backbone.sync = function(method
     options.error("Record not found");
   }
 };
-})();
+
+// Override 'Backbone.sync' to default to localSync, 
+// the original 'Backbone.sync' is still available in 'Backbone.ajaxSync'
+Backbone.ajaxSync = Backbone.sync;
+Backbone.sync = Backbone.LocalStorage.sync;
