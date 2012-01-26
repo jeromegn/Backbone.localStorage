@@ -59,14 +59,14 @@ $(document).ready(function() {
         equals(library.first().get('length'), 123, 'verify length is still there');
 		
 		library.fetch();
-		equals(library.length, 1, 'should not create second object when changing ID');
+		equals(library.length, 2, 'should not auto remove first object when changing ID');
     });
     
     test("should remove from collection", function() {
-		_(23).times(function() {
-			library.create(attrs);
-		});
-        library.each(function(book) {
+        _(23).times(function(index) {
+            library.create({id: index});
+        });
+        _(library.toArray()).chain().clone().each(function(book) {
             book.destroy();
         });
         equals(library.length, 0, 'item was destroyed and library is empty');
@@ -117,7 +117,7 @@ $(document).ready(function() {
             author : 'Bill Shakespeare',
             length : 123
         },
-		localStorage = new Backbone.LocalStorage('TheTempest')
+		localStorage : new Backbone.LocalStorage('TheTempest')
     });
 	
 	var book = null;
@@ -137,36 +137,10 @@ $(document).ready(function() {
 	});
 
 	test("should remove book when destroying", function() {
-		book.save()
+		book.save({author: 'fnord'})
+		equals(Book.prototype.localStorage.findAll().length, 1, 'book removed');
 		book.destroy()
-		book.fetch()
-        equals(book.get('author'), undefined, 'attributes not initialized from defaults');
+		equals(Book.prototype.localStorage.findAll().length, 0, 'book removed');
 	});
 	
-    test("Model: localSync", function() {
-        // Write to localStorage/store
-        book.save();
-        
-        equals(book.get('title'), 'The Tempest', 'model created');
-        
-        // Set, but don't save
-        book.set({ 'title': "Wombat's Fun Adventure" });
-        equals(book.get('title'), "Wombat's Fun Adventure", 'title changed, but not saved');
-        
-        book.fetch();
-        
-        // Read, the unsaved title value above should be discarded
-        equals(book.get('title'), 'The Tempest', 'read from store successful')
-        
-        // Update
-        book.save({ author: 'William Shakespeare'});
-        book.fetch();
-        equals(book.get('author'), 'William Shakespeare', 'author successfully updated');
-        equals(book.get('length'), 123, 'verify length is still there');
-        
-        // Delete
-        book.destroy();
-        
-    });
-    
 });

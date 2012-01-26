@@ -16,7 +16,7 @@ Create your collections like so:
 ```javascript
 window.SomeCollection = Backbone.Collection.extend({
   
-  localStorage: new Store("SomeCollection"), // Unique name within your app.
+  localStorage: new Backbone.LocalStorage("SomeCollection"), // Unique name within your app.
   
   // ... everything else is normal.
   
@@ -28,6 +28,7 @@ Feel free to use Backbone as you usually would, this is a drop-in replacement.
 ## Credits
 
 Thanks to [Mark Woodall](https://github.com/llad) for the QUnit tests.
+Thanks to [Martin Häcker](https://github.com/dwt) for the many fixes and the test isolation.
 
 ## Licensed
 

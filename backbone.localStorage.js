@@ -1,5 +1,5 @@
 /**
- * Backbone localStorage Adapter v1.0
+ * Backbone localStorage Adapter
  * https://github.com/jeromegn/Backbone.localStorage
  */
 
@@ -80,7 +80,7 @@ _.extend(Backbone.LocalStorage.prototype, {
 
 // localSync delegate to the model or collection's
 // *localStorage* property, which should be an instance of `Store`.
-// window.Store.sync is deprectated, use Backbone.LocalStorage.sync instead
+// window.Store.sync and Backbone.localSync is deprectated, use Backbone.LocalStorage.sync instead
 Backbone.LocalStorage.sync = window.Store.sync = Backbone.localSync = function(method, model, options, error) {
 
   // Backwards compatibility with Backbone <= 0.3.3
@@ -112,3 +112,5 @@ Backbone.LocalStorage.sync = window.Store.sync = Backbone.localSync = function(m
 // the original 'Backbone.sync' is still available in 'Backbone.ajaxSync'
 Backbone.ajaxSync = Backbone.sync;
 Backbone.sync = Backbone.LocalStorage.sync;
+
+})();
