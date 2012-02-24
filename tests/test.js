@@ -126,5 +126,21 @@ $(document).ready(function() {
         book.destroy();
         
     });
-
+    
+    // Test to ensure guid is in expected format.
+    test( 'Test guid length', function() 
+    {
+        var guid  = window.guid(),
+            parts = guid.split( '-' );
+        
+        expect( 6 );
+        
+        //880df3f8-73a0-ebc8-176f-e635670b8aed
+        ok( guid );
+        equals(  8, parts[0].length );
+        equals(  4, parts[1].length );
+        equals(  4, parts[2].length );
+        equals(  4, parts[3].length );
+        equals( 12, parts[4].length );
+    });
 });

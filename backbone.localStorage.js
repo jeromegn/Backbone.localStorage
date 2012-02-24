@@ -14,7 +14,20 @@ function S4() {
 
 // Generate a pseudo-GUID by concatenating random hexadecimal.
 function guid() {
-   return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
+    var _guid  = S4();
+        _guid += S4();
+        _guid += "-";
+        _guid += S4();
+        _guid += "-";
+        _guid += S4();
+        _guid += "-";
+        _guid += S4();
+        _guid += "-";
+        _guid += S4();
+        _guid += S4();
+        _guid += S4();
+        
+    return _guid;
 };
 
 // Our Store is represented by a single JS object in *localStorage*. Create it
