@@ -84,12 +84,6 @@ _.extend(Backbone.LocalStorage.prototype, {
 Backbone.LocalStorage.sync = window.Store.sync = Backbone.localSync = function(method, model, options, error) {
   var store = model.localStorage || model.collection.localStorage;
 
-  // if there's no localStorage property, we can assume that we want to use the default Backbone sync method.
-  if(!store) {
-    Backbone.ajaxSync(method, model, options, error);
-    return;
-  }
-
   // Backwards compatibility with Backbone <= 0.3.3
   if (typeof options == 'function') {
     options = {
@@ -114,9 +108,21 @@ Backbone.LocalStorage.sync = window.Store.sync = Backbone.localSync = function(m
   }
 };
 
-// Override 'Backbone.sync' to default to localSync, 
-// the original 'Backbone.sync' is still available in 'Backbone.ajaxSync'
 Backbone.ajaxSync = Backbone.sync;
-Backbone.sync = Backbone.LocalStorage.sync;
+
+Backbone.getSyncMethod = function(model) {
+	if(model.localStorage || (model.collection && model.collection.localStorage))
+	{
+		return Backbone.localSync;
+	}
+
+	return Backbone.ajaxSync;
+};
+
+// Override 'Backbone.sync' to default to localSync,
+// the original 'Backbone.sync' is still available in 'Backbone.ajaxSync'
+Backbone.sync = function(method, model, options, error) {
+	Backbone.getSyncMethod(model).apply(this, [method, model, options, error]);
+};
 
 })();
