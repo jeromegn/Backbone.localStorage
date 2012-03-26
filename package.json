@@ -1,0 +1,18 @@
+{
+  "author": "Jerome Gravel-Niquet <jeromegn@gmail.com> (http://jgn.me)",
+  "name": "Backbone.localStorage",
+  "version": "0.0.0",
+  "repository": {
+      "type": "git"
+    , "url": "git://github.com/jeromegn/Backbone.localStorage.git"
+  },
+  "scripts": {
+      "test" : "open tests/test.html"
+  },
+  "dependencies": {
+      "uglify-js" : "~1.2.6"
+  },
+  "engines": {
+      "node": "*"
+  }
+}

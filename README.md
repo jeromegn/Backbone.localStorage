@@ -25,6 +25,17 @@ window.SomeCollection = Backbone.Collection.extend({
   
 Feel free to use Backbone as you usually would, this is a drop-in replacement.
 
+## Contributing
+
+1. Fork;
+2. Write code;
+3. Write tests (or vice et versa);
+4. `make test`;
+5. `make minified`;
+6. Create a pull request.
+
+Have fun!
+
 ## Credits
 
 Thanks to [Mark Woodall](https://github.com/llad) for the QUnit tests.
