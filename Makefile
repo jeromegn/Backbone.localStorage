@@ -1,5 +1,5 @@
 test:
-	npm test
+	open tests/test.html
 
 minified:
 	uglifyjs -o backbone.localStorage-min.js backbone.localStorage.js

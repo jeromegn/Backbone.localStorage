@@ -27,6 +27,8 @@ Feel free to use Backbone as you usually would, this is a drop-in replacement.
 
 ## Contributing
 
+You'll need node and to `npm install` before being able to run the minification script.
+
 1. Fork;
 2. Write code;
 3. Write tests (or vice et versa);

@@ -6,9 +6,6 @@
       "type": "git"
     , "url": "git://github.com/jeromegn/Backbone.localStorage.git"
   },
-  "scripts": {
-      "test" : "open tests/test.html"
-  },
   "dependencies": {
       "uglify-js" : "~1.2.6"
   },
