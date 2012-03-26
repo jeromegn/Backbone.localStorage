@@ -142,5 +142,21 @@ $(document).ready(function() {
 		book.destroy()
 		equals(Book.prototype.localStorage.findAll().length, 0, 'book removed');
 	});
-	
+
+	test("Book should use local sync", function()
+	{
+		var method = Backbone.getSyncMethod(book);
+		equals(method, Backbone.localSync);
+	});
+
+	var MyRemoteModel = Backbone.Model.extend();
+
+	var remoteModel = new MyRemoteModel();
+
+	test("remoteModel should use ajax sync", function()
+	{
+		var method = Backbone.getSyncMethod(remoteModel);
+		equals(method, Backbone.ajaxSync);
+	});
+
 });
