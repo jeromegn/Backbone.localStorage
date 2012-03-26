@@ -82,6 +82,13 @@ _.extend(Backbone.LocalStorage.prototype, {
 // *localStorage* property, which should be an instance of `Store`.
 // window.Store.sync and Backbone.localSync is deprectated, use Backbone.LocalStorage.sync instead
 Backbone.LocalStorage.sync = window.Store.sync = Backbone.localSync = function(method, model, options, error) {
+  var store = model.localStorage || model.collection.localStorage;
+
+  // if there's no localStorage property, we can assume that we want to use the default Backbone sync method.
+  if(!store) {
+    Backbone.ajaxSync(method, model, options, error);
+    return;
+  }
 
   // Backwards compatibility with Backbone <= 0.3.3
   if (typeof options == 'function') {
@@ -92,7 +99,6 @@ Backbone.LocalStorage.sync = window.Store.sync = Backbone.localSync = function(m
   }
 
   var resp;
-  var store = model.localStorage || model.collection.localStorage;
 
   switch (method) {
     case "read":    resp = model.id != undefined ? store.find(model) : store.findAll(); break;
