@@ -1,3 +1,10 @@
+QUnit.done = function(results){
+  if (results.failed)
+    console.log("failed")
+  else
+    console.log("success")
+};
+
 $(document).ready(function() {
     var Library = Backbone.Collection.extend({
         localStorage: new Backbone.LocalStorage("libraryStore")
@@ -33,22 +40,22 @@ $(document).ready(function() {
         equals(library.first().get('author'), 'Bill Shakespeare', 'author was read');
         equals(library.first().get('length'), 123, 'length was read');
     });
-	
-	test("should discard unsaved changes on fetch", function() {
+  
+  test("should discard unsaved changes on fetch", function() {
         library.create(attrs);
         library.first().set({ 'title': "Wombat's Fun Adventure" });
         equals(library.first().get('title'), "Wombat's Fun Adventure", 'title changed, but not saved');
         library.fetch();
         equals(library.first().get('title'), 'The Tempest', 'title was read');
-	});
-	
-	test("should persist changes", function(){
+  });
+  
+  test("should persist changes", function(){
         library.create(attrs);
         equals(library.first().get('author'), 'Bill Shakespeare', 'author was read');
         library.first().save({ author: 'William Shakespeare' });
         library.fetch();
         equals(library.first().get('author'), 'William Shakespeare', 'verify author update');
-	});
+  });
     
     test("should allow to change id", function() {
         library.create(attrs);
@@ -57,9 +64,9 @@ $(document).ready(function() {
         equals(library.first().get('title'), 'The Tempest', 'verify title is still there');
         equals(library.first().get('author'), 'William Shakespeare', 'verify author update');
         equals(library.first().get('length'), 123, 'verify length is still there');
-		
-		library.fetch();
-		equals(library.length, 2, 'should not auto remove first object when changing ID');
+    
+    library.fetch();
+    equals(library.length, 2, 'should not auto remove first object when changing ID');
     });
     
     test("should remove from collection", function() {
@@ -73,7 +80,7 @@ $(document).ready(function() {
         library.fetch()
         equals(library.length, 0, 'item was destroyed and library is empty even after fetch');
     });
-	
+  
     test("should not try to load items from localstorage if they are not there anymore", function() {
         library.create(attrs);
         localStorage.clear();
@@ -103,60 +110,60 @@ $(document).ready(function() {
         equals(collection.first().id, collection.first().get('_id'));
     });
 
-	
+  
     module("localStorage on models", {
-		setup: function() {
+    setup: function() {
             window.localStorage.clear();
-			book = new Book();
-		}
+      book = new Book();
+    }
     });
-	
+  
     var Book = Backbone.Model.extend({
         defaults: {
             title  : 'The Tempest',
             author : 'Bill Shakespeare',
             length : 123
         },
-		localStorage : new Backbone.LocalStorage('TheTempest')
+    localStorage : new Backbone.LocalStorage('TheTempest')
     });
-	
-	var book = null;
+  
+  var book = null;
     
-	test("should overwrite unsaved changes when fetching", function() {
-		book.save()
+  test("should overwrite unsaved changes when fetching", function() {
+    book.save()
         book.set({ 'title': "Wombat's Fun Adventure" });
         book.fetch();
         equals(book.get('title'), 'The Tempest', 'model created');
-	});
-	
-	test("should persist changes", function(){
+  });
+  
+  test("should persist changes", function(){
         book.save({ author: 'William Shakespeare'});
         book.fetch();
         equals(book.get('author'), 'William Shakespeare', 'author successfully updated');
         equals(book.get('length'), 123, 'verify length is still there');
-	});
+  });
 
-	test("should remove book when destroying", function() {
-		book.save({author: 'fnord'})
-		equals(Book.prototype.localStorage.findAll().length, 1, 'book removed');
-		book.destroy()
-		equals(Book.prototype.localStorage.findAll().length, 0, 'book removed');
-	});
+  test("should remove book when destroying", function() {
+    book.save({author: 'fnord'})
+    equals(Book.prototype.localStorage.findAll().length, 1, 'book removed');
+    book.destroy()
+    equals(Book.prototype.localStorage.findAll().length, 0, 'book removed');
+  });
 
-	test("Book should use local sync", function()
-	{
-		var method = Backbone.getSyncMethod(book);
-		equals(method, Backbone.localSync);
-	});
+  test("Book should use local sync", function()
+  {
+    var method = Backbone.getSyncMethod(book);
+    equals(method, Backbone.localSync);
+  });
 
-	var MyRemoteModel = Backbone.Model.extend();
+  var MyRemoteModel = Backbone.Model.extend();
 
-	var remoteModel = new MyRemoteModel();
+  var remoteModel = new MyRemoteModel();
 
-	test("remoteModel should use ajax sync", function()
-	{
-		var method = Backbone.getSyncMethod(remoteModel);
-		equals(method, Backbone.ajaxSync);
-	});
+  test("remoteModel should use ajax sync", function()
+  {
+    var method = Backbone.getSyncMethod(remoteModel);
+    equals(method, Backbone.ajaxSync);
+  });
 
 });

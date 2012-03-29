@@ -1,22 +1,26 @@
 var fs = require('fs')
   , page = new WebPage()
-  , file = fs.absolute('test/index.html');
+  , file = fs.absolute('tests/test.html');
 
 page.onConsoleMessage = function(msg) {
   console.log(msg);
-  if (/^Tests completed in/.test(msg)) {
-    phantom.exit(page.evaluate(function () {
-      if (window.QUnit && QUnit.config && QUnit.config.stats) {
-        return QUnit.config.stats.bad || 0;
-      }
-      return 1;
-    }));
-  }
+  if (msg === "success")
+    phantom.exit(0);
+  else
+    phantom.exit(1);
+};
+
+page.onError = function (msg, trace) {
+  console.log(msg);
+  trace.forEach(function(item) {
+    console.log('  ', item.file, ':', item.line);
+  });
+  phantom.exit(1);
 };
 
 page.open('file://' + file, function (status) {
   if (status !== 'success') {
-    console.log('FAIL to load the address');
-    phantom.exit(1);
+    console.log('Failed to load the address');
+    return phantom.exit(1);
   }
 });
