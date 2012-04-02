@@ -166,4 +166,12 @@ $(document).ready(function() {
     equals(method, Backbone.ajaxSync);
   });
 
+  test("Backbone.sync should return a value when ajax is used.", function ()
+  {
+    var returnValue = remoteModel.fetch({url: '/'});
+	notEqual(returnValue, undefined);
+  });
+
+
+
 });
