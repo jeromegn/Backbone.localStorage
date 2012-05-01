@@ -37,7 +37,10 @@ _.extend(Backbone.LocalStorage.prototype, {
   // Add a model, giving it a (hopefully)-unique GUID, if it doesn't already
   // have an id of it's own.
   create: function(model) {
-    if (!model.id) model.id = model.attributes[model.idAttribute] = guid();
+    if (!model.id) {
+        model.id = guid();
+        model.set(model.idAttribute, model.id);
+    }
     this.localStorage().setItem(this.name+"-"+model.id, JSON.stringify(model));
     this.records.push(model.id.toString());
     this.save();

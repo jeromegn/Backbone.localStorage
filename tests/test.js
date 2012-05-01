@@ -56,7 +56,13 @@ $(document).ready(function() {
         library.fetch();
         equals(library.first().get('author'), 'William Shakespeare', 'verify author update');
   });
-    
+
+
+  test("should store model id inside collection", function() {
+    var book = library.create(attrs);
+    equals(library.get(book.id), book, 'book has been read by id from collection');
+  });
+
     test("should allow to change id", function() {
         library.create(attrs);
         library.first().save({id: '1-the-tempest', author: 'William Shakespeare'});
