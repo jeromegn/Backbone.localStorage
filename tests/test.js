@@ -57,6 +57,30 @@ $(document).ready(function() {
         equals(library.first().get('author'), 'William Shakespeare', 'verify author update');
   });
 
+  test("should pass attributes to parse after creating", function() {
+    var book = new Backbone.Model(attrs);
+    book.collection = library;
+    
+    book.parse = function(savedAttrs) {
+      equal(savedAttrs.title, attrs.title, 'attributes passed to parse')
+      equal(savedAttrs.author, attrs.author, 'attributes passed to parse')
+      equal(savedAttrs.length, attrs.length, 'attributes passed to parse')
+    };
+    
+    book.save();
+  });
+  
+  test("should pass attributes to parse after updating", function() {
+    var book = library.create(attrs);
+    
+    book.parse = function(savedAttrs) {
+      equal(savedAttrs.title, attrs.title, 'attributes passed to parse')
+      equal(savedAttrs.author, attrs.author, 'attributes passed to parse')
+      equal(savedAttrs.length, attrs.length, 'attributes passed to parse')
+    };
+    
+    book.save();
+  });
 
   test("should store model id inside collection", function() {
     var book = library.create(attrs);
