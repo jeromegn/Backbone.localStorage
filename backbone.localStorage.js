@@ -100,7 +100,7 @@ Backbone.LocalStorage.sync = window.Store.sync = Backbone.localSync = function(m
     };
   }
 
-  var resp;
+  var resp, syncDfd = $.Deferred();
 
   switch (method) {
     case "read":    resp = model.id != undefined ? store.find(model) : store.findAll(); break;
@@ -111,9 +111,13 @@ Backbone.LocalStorage.sync = window.Store.sync = Backbone.localSync = function(m
 
   if (resp) {
     options.success(resp);
+    syncDfd.resolve();
   } else {
     options.error("Record not found");
+    syncDfd.reject();
   }
+
+  return syncDfd.promise();
 };
 
 Backbone.ajaxSync = Backbone.sync;
