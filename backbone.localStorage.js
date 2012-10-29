@@ -102,12 +102,16 @@ Backbone.LocalStorage.sync = window.Store.sync = Backbone.localSync = function(m
 
   var resp, syncDfd = $.Deferred && $.Deferred(); //If $ is having Deferred - use it. 
 
-  switch (method) {
-    case "read":    resp = model.id != undefined ? store.find(model) : store.findAll(); break;
-    case "create":  resp = store.create(model);                            break;
-    case "update":  resp = store.update(model);                            break;
-    case "delete":  resp = store.destroy(model);                           break;
-  }
+  try {
+
+    switch (method) {
+      case "read":    resp = model.id != undefined ? store.find(model) : store.findAll(); break;
+      case "create":  resp = store.create(model);                            break;
+      case "update":  resp = store.update(model);                            break;
+      case "delete":  resp = store.destroy(model);                           break;
+    }
+
+  catch (e) {}
 
   if (resp) {
     options.success(resp);
