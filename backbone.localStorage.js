@@ -111,7 +111,7 @@ Backbone.LocalStorage.sync = window.Store.sync = Backbone.localSync = function(m
       case "delete":  resp = store.destroy(model);                           break;
     }
 
-  catch (e) {}
+  } catch (e) {}
 
   if (resp) {
     options.success(resp);
