@@ -3,15 +3,13 @@
  * https://github.com/jeromegn/Backbone.localStorage
  */
 
-(function() {
+(function(_, Backbone) {
 // A simple module to replace `Backbone.sync` with *localStorage*-based
 // persistence. Models are given GUIDS, and saved into a JSON object. Simple
 // as that.
 
 // Hold reference to Underscore.js and Backbone.js in the closure in order
 // to make things work even if they are removed from the global namespace
-var _ = this._;
-var Backbone = this.Backbone;
 
 // Generate four random hex digits.
 function S4() {
@@ -129,4 +127,4 @@ Backbone.sync = function(method, model, options) {
   return Backbone.getSyncMethod(model).apply(this, [method, model, options]);
 };
 
-})();
+})(_, Backbone);
