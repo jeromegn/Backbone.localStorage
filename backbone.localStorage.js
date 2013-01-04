@@ -1,9 +1,17 @@
 /**
- * Backbone localStorage Adapter
+ * Backbone localStorage Adapter (modified to add AMD registration)
+ *
  * https://github.com/jeromegn/Backbone.localStorage
  */
-
-(function(_, Backbone) {
+(function (factory) {
+        if (typeof define === 'function' && define.amd) {
+                // AMD. Register as an anonymous module.
+                define('backbone.localstorage',['underscore','backbone'], factory);
+        } else {
+                // RequireJS isn't being used. Assume underscore and backbone is loaded in <script> tags
+                factory(_, Backbone);
+        }
+}(function(_, Backbone) {
 // A simple module to replace `Backbone.sync` with *localStorage*-based
 // persistence. Models are given GUIDS, and saved into a JSON object. Simple
 // as that.
@@ -127,4 +135,4 @@ Backbone.sync = function(method, model, options) {
   return Backbone.getSyncMethod(model).apply(this, [method, model, options]);
 };
 
-})(_, Backbone);
+}));
