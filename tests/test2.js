@@ -15,7 +15,7 @@ define("backbone", ["backbone-loader"], function(Loader) {
 	return Loader.Backbone;
 });
 
-require(["backbone", "backbone.localStorage"], function(Backbone) {
+require(["backbone"], function(Backbone) {
 	var Library = Backbone.Collection.extend({
 		localStorage: new Backbone.LocalStorage("libraryStore")
 	});
