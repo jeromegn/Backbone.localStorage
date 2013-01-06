@@ -1,5 +1,5 @@
 /**
- * Backbone localStorage Adapter (modified to add AMD registration)
+ * Backbone localStorage Adapter
  *
  * https://github.com/jeromegn/Backbone.localStorage
  */
