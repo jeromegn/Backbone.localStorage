@@ -4,7 +4,7 @@
 
 Quite simply a localStorage adapter for Backbone. It's a drop-in replacement for Backbone.Sync() to handle saving to a localStorage database.
 
-## Usage
+## Standard usage
 
 Include Backbone.localStorage after having included Backbone.js:
 
@@ -22,6 +22,43 @@ window.SomeCollection = Backbone.Collection.extend({
   
   // ... everything else is normal.
   
+});
+```
+## RequireJS usage
+
+Include [RequireJS](http://requirejs.org):
+
+```html
+<script type="text/javascript" src="lib/require.js"></script>
+```
+
+RequireJS config: 
+```javascript
+require.config({
+    paths: {
+        jquery: "lib/jquery",
+        underscore: "lib/underscore",
+        backbone: "lib/backbone",
+        localstorage: "lib/backbone.localStorage"
+    }
+});
+```
+
+Define your collection as a module:
+```javascript
+define("someCollection", ["underscore","backbone","localstorage"], function() {
+    var SomeCollection = Backbone.Collection.extend({
+        localStorage: new Backbone.LocalStorage("SomeCollection") // Unique name within your app.
+    });
+  
+    return new SomeCollection();
+});
+```
+
+Require your collection:
+```javascript
+require(["someCollection"], function(someCollection) {
+  // ready to use someCollection
 });
 ```
   
