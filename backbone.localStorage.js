@@ -70,13 +70,13 @@ _.extend(Backbone.LocalStorage.prototype, {
 
   // Retrieve a model from `this.data` by id.
   find: function(model) {
-    return JSON.parse(this.localStorage().getItem(this.name+"-"+model.id));
+    return this.jsonData(this.localStorage().getItem(this.name+"-"+model.id));
   },
 
   // Return the array of all models currently in storage.
   findAll: function() {
     return _(this.records).chain()
-        .map(function(id){return JSON.parse(this.localStorage().getItem(this.name+"-"+id));}, this)
+        .map(function(id){return this.jsonData(this.localStorage().getItem(this.name+"-"+id));}, this)
         .compact()
         .value();
   },
@@ -91,6 +91,11 @@ _.extend(Backbone.LocalStorage.prototype, {
 
   localStorage: function() {
       return localStorage;
+  },
+  
+  // fix for "illegal access" error on Android when JSON.parse is passed null
+  jsonData: function (data) {
+      return data && JSON.parse(data);
   }
 
 });
@@ -117,6 +122,10 @@ Backbone.LocalStorage.sync = window.Store.sync = Backbone.localSync = function(m
     if (options && options.error) options.error("Record not found");
     if (syncDfd) syncDfd.reject();
   }
+  
+  // add compatibility with $.ajax
+  // always execute callback for success and error
+  if (options && options.complete) options.complete(resp);
 
   return syncDfd && syncDfd.promise();
 };
