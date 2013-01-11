@@ -122,6 +122,10 @@ Backbone.LocalStorage.sync = window.Store.sync = Backbone.localSync = function(m
     if (options && options.error) options.error("Record not found");
     if (syncDfd) syncDfd.reject();
   }
+  
+  // add compatibility with $.ajax
+  // always execute callback for success and error
+  if (options && options.complete) options.complete(resp);
 
   return syncDfd && syncDfd.promise();
 };
