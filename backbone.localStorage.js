@@ -108,29 +108,46 @@ _.extend(Backbone.LocalStorage.prototype, {
 Backbone.LocalStorage.sync = window.Store.sync = Backbone.localSync = function(method, model, options) {
   var store = model.localStorage || model.collection.localStorage;
 
-  var resp, syncDfd = $.Deferred && $.Deferred(); //If $ is having Deferred - use it. 
+  var resp, errorMessage, syncDfd = $.Deferred && $.Deferred(); //If $ is having Deferred - use it. 
 
-  switch (method) {
-    case "read":
-      resp = model.id != undefined ? store.find(model) : store.findAll();
-      break;
-    case "create":
-      resp = store.create(model);
-      break;
-    case "update":
-      resp = store.update(model);
-      break;
-    case "delete":
-      resp = store.destroy(model);
-      break;
+  try {
+
+    switch (method) {
+      case "read":
+        resp = model.id != undefined ? store.find(model) : store.findAll();
+        break;
+      case "create":
+        resp = store.create(model);
+        break;
+      case "update":
+        resp = store.update(model);
+        break;
+      case "delete":
+        resp = store.destroy(model);
+        break;
+    }
+
+  } catch(error) {
+    if (error.code === DOMException.QUOTA_EXCEEDED_ERR && window.localStorage.length === 0)
+      errorMessage = "Private browsing is unsupported";
+    else
+      errorMessage = error.message;
   }
 
   if (resp) {
-    if (options && options.success) options.success(resp);
-    if (syncDfd) syncDfd.resolve();
+    if (options && options.success)
+      options.success(resp);
+    if (syncDfd)
+      syncDfd.resolve(resp);
+
   } else {
-    if (options && options.error) options.error("Record not found");
-    if (syncDfd) syncDfd.reject();
+    errorMessage = errorMessage ? errorMessage
+                                : "Record Not Found";
+    
+    if (options && options.error)
+      options.error(errorMessage);
+    if (syncDfd)
+      syncDfd.reject(errorMessage);
   }
   
   // add compatibility with $.ajax

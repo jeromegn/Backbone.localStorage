@@ -237,6 +237,47 @@ describe("Backbone.localStorage", function(){
 
   });
 
+  describe("Error handling", function(){
+
+    var Model = Backbone.Model.extend({
+      defaults: attributes,
+      localStorage: new Backbone.LocalStorage("modelStore")
+    });
+
+    before(function(){
+      window.localStorage.clear();
+    });
+
+    describe("private browsing", function(){
+
+      var model = new Model();
+
+      before(function(){
+        sinon.stub(window.localStorage, "setItem", function(){
+          var error = new Error();
+          error.code = DOMException.QUOTA_EXCEEDED_ERR;
+          throw error;
+        });
+      });
+
+      var error;
+
+      before(function(){
+        model.save(attributes, {
+          error: function(err){
+            error = err;
+          }
+        })
+      });
+
+      it("should return the error in the error callback", function(){
+        assert.equal(error, "Private browsing is unsupported");
+      });
+
+    });
+
+  });
+
 
 });
 
