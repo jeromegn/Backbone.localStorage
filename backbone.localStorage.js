@@ -105,7 +105,7 @@ Backbone.LocalStorage.sync = window.Store.sync = Backbone.localSync = function(m
   switch (method) {
     case "read":
         resp = model.id != undefined ? store.find(model) : store.findAll();
-        if(resp && resp.length >= 1 && (model instanceof Backbone.Model) ){
+        if(resp && resp instanceof Array && resp.length >= 1 && (model instanceof Backbone.Model) ){
             resp = resp[0];
         }
         break;
