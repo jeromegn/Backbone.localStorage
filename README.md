@@ -46,7 +46,7 @@ require.config({
 
 Define your collection as a module:
 ```javascript
-define("someCollection", ["underscore","backbone","localstorage"], function() {
+define("someCollection", ["localstorage"], function() {
     var SomeCollection = Backbone.Collection.extend({
         localStorage: new Backbone.LocalStorage("SomeCollection") // Unique name within your app.
     });
@@ -79,8 +79,8 @@ Have fun!
 
 ## Acknowledgments
 
-Thanks to [Mark Woodall](https://github.com/llad) for the initial tests (now refactored).
-Thanks to [Martin Häcker](https://github.com/dwt) for the many fixes and the test isolation.
+- [Mark Woodall](https://github.com/llad): initial tests (now refactored);
+- [Martin Häcker](https://github.com/dwt): many fixes and the test isolation.
 
 ## License
 
