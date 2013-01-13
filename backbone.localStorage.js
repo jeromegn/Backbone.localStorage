@@ -1,5 +1,6 @@
 /**
  * Backbone localStorage Adapter
+ * Version 1.0
  *
  * https://github.com/jeromegn/Backbone.localStorage
  */
@@ -52,20 +53,21 @@ _.extend(Backbone.LocalStorage.prototype, {
   // have an id of it's own.
   create: function(model) {
     if (!model.id) {
-        model.id = guid();
-        model.set(model.idAttribute, model.id);
+      model.id = guid();
+      model.set(model.idAttribute, model.id);
     }
     this.localStorage().setItem(this.name+"-"+model.id, JSON.stringify(model));
     this.records.push(model.id.toString());
     this.save();
-    return model.toJSON();
+    return this.find(model);
   },
 
   // Update a model by replacing its copy in `this.data`.
   update: function(model) {
     this.localStorage().setItem(this.name+"-"+model.id, JSON.stringify(model));
-    if (!_.include(this.records, model.id.toString())) this.records.push(model.id.toString()); this.save();
-    return model.toJSON();
+    if (!_.include(this.records, model.id.toString()))
+      this.records.push(model.id.toString()); this.save();
+    return this.find(model);
   },
 
   // Retrieve a model from `this.data` by id.
@@ -76,9 +78,9 @@ _.extend(Backbone.LocalStorage.prototype, {
   // Return the array of all models currently in storage.
   findAll: function() {
     return _(this.records).chain()
-        .map(function(id){return this.jsonData(this.localStorage().getItem(this.name+"-"+id));}, this)
-        .compact()
-        .value();
+      .map(function(id){return this.jsonData(this.localStorage().getItem(this.name+"-"+id));}, this)
+      .compact()
+      .value();
   },
 
   // Delete a model from `this.data`, returning it.
@@ -90,7 +92,7 @@ _.extend(Backbone.LocalStorage.prototype, {
   },
 
   localStorage: function() {
-      return localStorage;
+    return localStorage;
   },
   
   // fix for "illegal access" error on Android when JSON.parse is passed null
@@ -109,10 +111,18 @@ Backbone.LocalStorage.sync = window.Store.sync = Backbone.localSync = function(m
   var resp, syncDfd = $.Deferred && $.Deferred(); //If $ is having Deferred - use it. 
 
   switch (method) {
-    case "read":    resp = model.id != undefined ? store.find(model) : store.findAll(); break;
-    case "create":  resp = store.create(model);                            break;
-    case "update":  resp = store.update(model);                            break;
-    case "delete":  resp = store.destroy(model);                           break;
+    case "read":
+      resp = model.id != undefined ? store.find(model) : store.findAll();
+      break;
+    case "create":
+      resp = store.create(model);
+      break;
+    case "update":
+      resp = store.update(model);
+      break;
+    case "delete":
+      resp = store.destroy(model);
+      break;
   }
 
   if (resp) {
@@ -133,8 +143,7 @@ Backbone.LocalStorage.sync = window.Store.sync = Backbone.localSync = function(m
 Backbone.ajaxSync = Backbone.sync;
 
 Backbone.getSyncMethod = function(model) {
-  if(model.localStorage || (model.collection && model.collection.localStorage))
-  {
+  if(model.localStorage || (model.collection && model.collection.localStorage)) {
     return Backbone.localSync;
   }
 
