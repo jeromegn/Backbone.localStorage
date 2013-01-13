@@ -160,7 +160,7 @@ $(document).ready(function() {
   var book = null;
     
   test("should overwrite unsaved changes when fetching", function() {
-    book.save()
+        book.save();
         book.set({ 'title': "Wombat's Fun Adventure" });
         book.fetch();
         equals(book.get('title'), 'The Tempest', 'model created');
