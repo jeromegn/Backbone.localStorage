@@ -4,7 +4,7 @@
 
 Quite simply a localStorage adapter for Backbone. It's a drop-in replacement for Backbone.Sync() to handle saving to a localStorage database.
 
-## Standard usage
+## Usage
 
 Include Backbone.localStorage after having included Backbone.js:
 
@@ -24,7 +24,7 @@ window.SomeCollection = Backbone.Collection.extend({
   
 });
 ```
-## RequireJS usage
+### RequireJS
 
 Include [RequireJS](http://requirejs.org):
 
@@ -72,17 +72,17 @@ You'll need node and to `npm install` before being able to run the minification 
 2. Write code;
 3. Write tests (or vice et versa);
 4. `make test`;
-5. `make minified`;
+5. `make minify`;
 6. Create a pull request.
 
 Have fun!
 
-## Credits
+## Acknowledgments
 
-Thanks to [Mark Woodall](https://github.com/llad) for the QUnit tests.
+Thanks to [Mark Woodall](https://github.com/llad) for the initial tests (now refactored).
 Thanks to [Martin Häcker](https://github.com/dwt) for the many fixes and the test isolation.
 
-## Licensed
+## License
 
 Licensed under MIT license
 
