@@ -78,15 +78,21 @@ _.extend(Backbone.LocalStorage.prototype, {
   // Return the array of all models currently in storage.
   findAll: function() {
     return _(this.records).chain()
-      .map(function(id){return this.jsonData(this.localStorage().getItem(this.name+"-"+id));}, this)
+      .map(function(id){
+        return this.jsonData(this.localStorage().getItem(this.name+"-"+id));
+      }, this)
       .compact()
       .value();
   },
 
   // Delete a model from `this.data`, returning it.
   destroy: function(model) {
+    if (model.isNew())
+      return false
     this.localStorage().removeItem(this.name+"-"+model.id);
-    this.records = _.reject(this.records, function(record_id){return record_id == model.id.toString();});
+    this.records = _.reject(this.records, function(id){
+      return id === model.id.toString();
+    });
     this.save();
     return model;
   },

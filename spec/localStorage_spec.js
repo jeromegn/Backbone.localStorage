@@ -250,14 +250,15 @@ describe("Backbone.localStorage", function(){
 
     describe("private browsing", function(){
 
-      var model = new Model();
+      var model = new Model()
+        , oldSetItem = window.localStorage.setItem
 
       before(function(){
-        sinon.stub(window.localStorage, "setItem", function(){
+        window.localStorage.setItem = function(){
           var error = new Error();
           error.code = DOMException.QUOTA_EXCEEDED_ERR;
           throw error;
-        });
+        };
       });
 
       var error;
@@ -273,6 +274,10 @@ describe("Backbone.localStorage", function(){
       it("should return the error in the error callback", function(){
         assert.equal(error, "Private browsing is unsupported");
       });
+
+      after(function(){
+        window.localStorage.setItem = oldSetItem;
+      })
 
     });
 

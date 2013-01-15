@@ -71,7 +71,7 @@ You'll need node and to `npm install` before being able to run the minification 
 1. Fork;
 2. Write code;
 3. Write tests (or vice et versa);
-4. `make test`;
+4. `make test` or `open spec/runner.html`;
 5. `make minify`;
 6. Create a pull request.
 
