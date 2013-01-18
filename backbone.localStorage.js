@@ -158,7 +158,7 @@ Backbone.LocalStorage.sync = window.Store.sync = Backbone.localSync = function(m
       if (Backbone.VERSION === "0.9.10") {
         options.error(model, errorMessage, options);
       } else {
-        options.error(model, errorMessage, options);
+        options.error(errorMessage);
       }
       
     if (syncDfd)
