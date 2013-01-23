@@ -327,7 +327,7 @@ describe("Backbone backwards compatibility", function(){
       })
       
       it("result in an exception if fetch is called", function() {
-          assert.throw(collection.fetch, /has no method \'sync\'/ );
+          assert.throw(collection.fetch, /(has no method \'sync\'|undefined)/ );
       })
       
       it("should call with one parameter if in 0.9.9", function() {
