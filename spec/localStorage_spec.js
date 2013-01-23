@@ -265,7 +265,7 @@ describe("Backbone.localStorage", function(){
 
       before(function(){
         model.save(attributes, {
-          error: function(err){
+          error: function(model, err){
             error = err;
           }
         })
@@ -305,6 +305,56 @@ describe("Without Backbone.localStorage", function(){
       assert.equal(Backbone.getSyncMethod(model), Backbone.ajaxSync);
     });
   });
+
+});
+
+describe("Backbone backwards compatibility", function(){
+
+  describe("Should result in an exception when in backbone is 0.9.9", function(){
+    
+      var Model = Backbone.Model.extend();
+
+      var Collection = Backbone.Collection.extend({
+        model: Model,
+        localStorage: new Backbone.LocalStorage("collectionStore")
+      });
+
+      var collection = new Collection();
+      var cacheLocalSync = Backbone.localSync;
+      
+      before(function() {
+          Backbone.VERSION = "0.9.9";
+      })
+      
+      it("result in an exception if fetch is called", function() {
+          assert.throw(collection.fetch, /has no method \'sync\'/ );
+      })
+      
+      it("should call with one parameter if in 0.9.9", function() {
+            
+            Backbone.localSync = function(method, model, options) {
+                
+                options.success = function() {
+                    assert.equal(arguments.length,1, "Should only be called with one argument in backbone 0.9.9")
+                }
+                
+                cacheLocalSync(method, model, options)
+            }
+         
+        collection.fetch()
+         
+         
+      })
+      
+      after(function() {
+          Backbone.VERSION = "0.9.10";
+          Backbone.localSync = cacheLocalSync;
+      })      
+
+  });
+  
+  
+
 
 });
 
