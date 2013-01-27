@@ -308,56 +308,6 @@ describe("Without Backbone.localStorage", function(){
 
 });
 
-describe("Backbone backwards compatibility", function(){
-
-  describe("Should result in an exception when in backbone is 0.9.9", function(){
-    
-      var Model = Backbone.Model.extend();
-
-      var Collection = Backbone.Collection.extend({
-        model: Model,
-        localStorage: new Backbone.LocalStorage("collectionStore")
-      });
-
-      var collection = new Collection();
-      var cacheLocalSync = Backbone.localSync;
-      
-      before(function() {
-          Backbone.VERSION = "0.9.9";
-      })
-      
-      it("result in an exception if fetch is called", function() {
-          assert.throw(collection.fetch, /(has no method \'sync\'|undefined)/ );
-      })
-      
-      it("should call with one parameter if in 0.9.9", function() {
-            
-            Backbone.localSync = function(method, model, options) {
-                
-                options.success = function() {
-                    assert.equal(arguments.length,1, "Should only be called with one argument in backbone 0.9.9")
-                }
-                
-                cacheLocalSync(method, model, options)
-            }
-         
-        collection.fetch()
-         
-         
-      })
-      
-      after(function() {
-          Backbone.VERSION = "0.9.10";
-          Backbone.localSync = cacheLocalSync;
-      })      
-
-  });
-  
-  
-
-
-});
-
 
 // For some reason this is not ran when viewed in a browser
 // but it is ran when using `mocha-phantomjs`.
