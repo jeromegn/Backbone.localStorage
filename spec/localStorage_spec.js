@@ -197,6 +197,16 @@ describe("Backbone.localStorage", function(){
       assert.equal(Backbone.getSyncMethod(model), Backbone.localSync);
     });
 
+    describe("fetch", function(){
+      it('should fire sync event on fetch', function(done) {
+        var model = new Model(attributes);
+        model.on('sync', function(){
+          done();
+        });
+        model.fetch();
+      });
+    });
+
     describe("save", function(){
 
       before(function(){
@@ -219,6 +229,23 @@ describe("Backbone.localStorage", function(){
           assert.deepEqual(model.toJSON(), _.extend(_.clone(attributes), {id: model.id, number: 42}));
         });
 
+      });
+
+      describe('fires events', function(){
+        before(function(){
+          this.model = new Model();
+        });
+        after(function(){
+          this.model.destroy();
+        });
+
+        it('should fire sync event on save', function(done) {
+          this.model.on('sync', function(){
+            this.model.off('sync');
+            done();
+          }, this);
+          this.model.save({foo: 'baz'});
+        });
       });
 
     });
@@ -273,6 +300,13 @@ describe("Backbone.localStorage", function(){
 
       it("should return the error in the error callback", function(){
         assert.equal(error, "Private browsing is unsupported");
+      });
+
+      it('should throw an error event', function(done){
+        model.on('error', function() {
+          done();
+        });
+        model.save();
       });
 
       after(function(){
