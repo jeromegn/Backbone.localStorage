@@ -33,6 +33,27 @@ function guid() {
    return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
 };
 
+// test two semvers, returns true if second gte first
+function semverGte(min, current) {
+    var granularity = 0; // only match to the level of the "min" version
+
+    min = _.reduce(min.replace(/-.*$/, '').split('.'), function(memo, n) { // trim everything after a dash
+        granularity++;
+        memo *= 1000; // assume no version level has more than 1000 versions
+        return memo + Number(n);
+    }, 0);
+    current = _.reduce(current.replace(/-.*$/, '').split('.'), function(memo, n) {
+        if (granularity-- > 0) { // step back through granularities
+            memo *= 1000;
+            return memo + Number(n);
+        } else {
+            return memo;
+        }
+    }, 0);
+
+    return current >= min;
+}
+
 // Our Store is represented by a single JS object in *localStorage*. Create it
 // with a meaningful name, like the name you'd give a table.
 // window.Store is deprectated, use Backbone.LocalStorage instead
@@ -100,7 +121,7 @@ _.extend(Backbone.LocalStorage.prototype, {
   localStorage: function() {
     return localStorage;
   },
-  
+
   // fix for "illegal access" error on Android when JSON.parse is passed null
   jsonData: function (data) {
       return data && JSON.parse(data);
@@ -114,7 +135,7 @@ _.extend(Backbone.LocalStorage.prototype, {
 Backbone.LocalStorage.sync = window.Store.sync = Backbone.localSync = function(method, model, options) {
   var store = model.localStorage || model.collection.localStorage;
 
-  var resp, errorMessage, syncDfd = $.Deferred && $.Deferred(); //If $ is having Deferred - use it. 
+  var resp, errorMessage, syncDfd = $.Deferred && $.Deferred(); //If $ is having Deferred - use it.
 
   try {
 
@@ -143,7 +164,7 @@ Backbone.LocalStorage.sync = window.Store.sync = Backbone.localSync = function(m
   if (resp) {
     model.trigger("sync", model, resp, options);
     if (options && options.success)
-      if (Backbone.VERSION === "0.9.10") {
+      if (semverGte("0.9.10", Backbone.VERSION)) {
         options.success(model, resp, options);
       } else {
         options.success(resp);
@@ -154,19 +175,19 @@ Backbone.LocalStorage.sync = window.Store.sync = Backbone.localSync = function(m
   } else {
     errorMessage = errorMessage ? errorMessage
                                 : "Record Not Found";
-    
+
     model.trigger("error", model, errorMessage, options);
     if (options && options.error)
-      if (Backbone.VERSION === "0.9.10") {
+      if (semverGte("0.9.10", Backbone.VERSION)) {
         options.error(model, errorMessage, options);
       } else {
         options.error(errorMessage);
       }
-      
+
     if (syncDfd)
       syncDfd.reject(errorMessage);
   }
-  
+
   // add compatibility with $.ajax
   // always execute callback for success and error
   if (options && options.complete) options.complete(resp);
