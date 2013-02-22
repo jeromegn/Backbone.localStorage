@@ -118,6 +118,11 @@ _.extend(Backbone.LocalStorage.prototype, {
     _.chain(local).keys()
       .filter(function (k) { return itemRe.test(k); })
       .each(function (k) { local.removeItem(k); });
+  },
+
+  // Size of localStorage.
+  _storageSize: function() {
+    return this.localStorage().length;
   }
 
 });
@@ -148,8 +153,7 @@ Backbone.LocalStorage.sync = window.Store.sync = Backbone.localSync = function(m
     }
 
   } catch(error) {
-    // Special test case: Can't easily mock `window.localStorage.length`, so add test detection.
-    if (error.code === DOMException.QUOTA_EXCEEDED_ERR && (window.localStorage.length === 0 || window.localStorage.setItem._isTest))
+    if (error.code === DOMException.QUOTA_EXCEEDED_ERR && store._storageSize() === 0)
       errorMessage = "Private browsing is unsupported";
     else
       errorMessage = error.message;

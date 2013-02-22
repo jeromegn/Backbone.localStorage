@@ -274,22 +274,20 @@ describe("Backbone.localStorage", function(){
     describe("private browsing", function(){
 
       var model = new Model()
-        , stub
+        , oldSetItem = window.localStorage.setItem
+        , oldStorageSize = model.localStorage._storageSize
         , error;
 
       before(function(done){
         model.localStorage._clear();
 
-        // Mock browser conditions for private error.
-        stub = sinon.stub(window.localStorage, "setItem").throws(function(){
+        // Patch browser conditions for private error.
+        model.localStorage._storageSize = function(){ return 0; };
+        window.localStorage.setItem = function(){
           var error = new Error();
           error.code = DOMException.QUOTA_EXCEEDED_ERR;
-          return error;
-        }());
-
-        // TODO MOCK & REMOVE LIB SHIM
-        // Indicate test only function (wiped on unpatch).
-        window.localStorage.setItem._isTest = true;
+          throw error;
+        };
 
         model.save(attributes, {
           error: function(model, err){
@@ -311,8 +309,9 @@ describe("Backbone.localStorage", function(){
       });
 
       after(function(){
-        // Unwrap stubs.
-        stub.restore();
+        // Unwrap patches.
+        model.localStorage._storageSize = oldStorageSize;
+        window.localStorage.setItem = oldSetItem;
       })
 
     });
