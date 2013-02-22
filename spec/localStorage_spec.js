@@ -285,7 +285,6 @@ describe("Backbone.localStorage", function(){
     });
 
     before(function(){
-      // TODO HERE window.localStorage.clear();
       clearStorage("modelStore");
     });
 
@@ -293,8 +292,15 @@ describe("Backbone.localStorage", function(){
 
       var model = new Model()
         , oldSetItem = window.localStorage.setItem
+        , oldLength = window.localStorage.length;
 
       before(function(){
+        // Patch localStorage length to allow error trap.
+        Object.defineProperty(window.localStorage, "length", {
+          configurable: true,
+          get: function() { return 0; }
+        });
+
         window.localStorage.setItem = function(){
           var error = new Error();
           error.code = DOMException.QUOTA_EXCEEDED_ERR;
@@ -312,7 +318,7 @@ describe("Backbone.localStorage", function(){
         })
       });
 
-      it.only("should return the error in the error callback", function(){
+      it("should return the error in the error callback", function(){
         assert.equal(error, "Private browsing is unsupported");
       });
 
@@ -324,6 +330,12 @@ describe("Backbone.localStorage", function(){
       });
 
       after(function(){
+        // Restore localStorage length.
+        Object.defineProperty(window.localStorage, "length", {
+          configurable: true,
+          value: oldLength
+        });
+
         window.localStorage.setItem = oldSetItem;
       })
 
