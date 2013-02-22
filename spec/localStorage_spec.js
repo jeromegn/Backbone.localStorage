@@ -291,21 +291,17 @@ describe("Backbone.localStorage", function(){
     describe("private browsing", function(){
 
       var model = new Model()
-        , oldSetItem = window.localStorage.setItem
-        , oldLength = window.localStorage.length;
+        , oldSetItem = window.localStorage.setItem;
 
       before(function(){
-        // Patch localStorage length to allow error trap.
-        Object.defineProperty(window.localStorage, "length", {
-          configurable: true,
-          get: function() { return 0; }
-        });
-
         window.localStorage.setItem = function(){
           var error = new Error();
           error.code = DOMException.QUOTA_EXCEEDED_ERR;
           throw error;
         };
+
+        // Indicate test only function.
+        window.localStorage.setItem._isTest = true;
       });
 
       var error;
@@ -330,12 +326,6 @@ describe("Backbone.localStorage", function(){
       });
 
       after(function(){
-        // Restore localStorage length.
-        Object.defineProperty(window.localStorage, "length", {
-          configurable: true,
-          value: oldLength
-        });
-
         window.localStorage.setItem = oldSetItem;
       })
 

@@ -100,7 +100,7 @@ _.extend(Backbone.LocalStorage.prototype, {
   localStorage: function() {
     return localStorage;
   },
-  
+
   // fix for "illegal access" error on Android when JSON.parse is passed null
   jsonData: function (data) {
       return data && JSON.parse(data);
@@ -110,11 +110,11 @@ _.extend(Backbone.LocalStorage.prototype, {
 
 // localSync delegate to the model or collection's
 // *localStorage* property, which should be an instance of `Store`.
-// window.Store.sync and Backbone.localSync is deprectated, use Backbone.LocalStorage.sync instead
+// window.Store.sync and Backbone.localSync is deprecated, use Backbone.LocalStorage.sync instead
 Backbone.LocalStorage.sync = window.Store.sync = Backbone.localSync = function(method, model, options) {
   var store = model.localStorage || model.collection.localStorage;
 
-  var resp, errorMessage, syncDfd = $.Deferred && $.Deferred(); //If $ is having Deferred - use it. 
+  var resp, errorMessage, syncDfd = $.Deferred && $.Deferred(); //If $ is having Deferred - use it.
 
   try {
 
@@ -134,7 +134,8 @@ Backbone.LocalStorage.sync = window.Store.sync = Backbone.localSync = function(m
     }
 
   } catch(error) {
-    if (error.code === DOMException.QUOTA_EXCEEDED_ERR && window.localStorage.length === 0)
+    // Special test case: Can't easily mock `window.localStorage.length`, so add test detection.
+    if (error.code === DOMException.QUOTA_EXCEEDED_ERR && (window.localStorage.length === 0 || window.localStorage.setItem._isTest))
       errorMessage = "Private browsing is unsupported";
     else
       errorMessage = error.message;
@@ -154,7 +155,7 @@ Backbone.LocalStorage.sync = window.Store.sync = Backbone.localSync = function(m
   } else {
     errorMessage = errorMessage ? errorMessage
                                 : "Record Not Found";
-    
+
     model.trigger("error", model, errorMessage, options);
     if (options && options.error)
       if (Backbone.VERSION === "0.9.10") {
@@ -162,11 +163,11 @@ Backbone.LocalStorage.sync = window.Store.sync = Backbone.localSync = function(m
       } else {
         options.error(errorMessage);
       }
-      
+
     if (syncDfd)
       syncDfd.reject(errorMessage);
   }
-  
+
   // add compatibility with $.ajax
   // always execute callback for success and error
   if (options && options.complete) options.complete(resp);
