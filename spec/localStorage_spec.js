@@ -8,6 +8,19 @@ describe("Backbone.localStorage", function(){
     number: 1337
   };
 
+  // Clear localStorage for specific collection.
+  var clearStorage = function (name) {
+    var itemRe = new RegExp("^" + name + "-");
+
+    // Remove id-tracking item (e.g., "foo").
+    window.localStorage.removeItem(name);
+
+    // Match all data items (e.g., "foo-ID") and remove.
+    _.chain(window.localStorage).keys()
+      .filter(function (k) { return itemRe.test(k); })
+      .each(function (k) { window.localStorage.removeItem(k); });
+  };
+
   describe("on a Collection", function(){
 
     var Model = Backbone.Model.extend({
@@ -24,7 +37,7 @@ describe("Backbone.localStorage", function(){
 
     // Clean up before starting
     before(function(){
-      window.localStorage.clear();
+      clearStorage("collectionStore");
     });
 
     before(function(){
@@ -41,7 +54,7 @@ describe("Backbone.localStorage", function(){
 
 
     describe("create", function(){
-      
+
       var model;
 
       before(function(){
@@ -65,7 +78,7 @@ describe("Backbone.localStorage", function(){
     });
 
     describe("get (by `id`)", function(){
-      
+
       var model;
 
       before(function(){
@@ -77,7 +90,7 @@ describe("Backbone.localStorage", function(){
       });
 
     });
-  
+
     describe("instances", function(){
 
       describe("save", function(){
@@ -119,7 +132,7 @@ describe("Backbone.localStorage", function(){
       });
 
       describe("destroy", function(){
-        
+
         var beforeFetchLength, afterFetchLength;
 
         before(function(){
@@ -153,7 +166,7 @@ describe("Backbone.localStorage", function(){
       });
 
       describe("with a different `idAttribute`", function(){
-        
+
         var Model2 = Backbone.Model.extend({
           defaults: attributes,
           idAttribute: "_id"
@@ -190,7 +203,7 @@ describe("Backbone.localStorage", function(){
     var model = new Model();
 
     before(function(){
-      window.localStorage.clear();
+      clearStorage("modelStore");
     });
 
     it("should use `localSync`", function(){
@@ -219,7 +232,7 @@ describe("Backbone.localStorage", function(){
       });
 
       describe("with new attributes", function(){
-        
+
         before(function(){
           model.save({number: 42});
           model.fetch();
@@ -251,7 +264,7 @@ describe("Backbone.localStorage", function(){
     });
 
     describe("destroy", function(){
-      
+
       before(function(){
         model.destroy();
       });
@@ -272,7 +285,8 @@ describe("Backbone.localStorage", function(){
     });
 
     before(function(){
-      window.localStorage.clear();
+      // TODO HERE window.localStorage.clear();
+      clearStorage("modelStore");
     });
 
     describe("private browsing", function(){
@@ -298,7 +312,7 @@ describe("Backbone.localStorage", function(){
         })
       });
 
-      it("should return the error in the error callback", function(){
+      it.only("should return the error in the error callback", function(){
         assert.equal(error, "Private browsing is unsupported");
       });
 
