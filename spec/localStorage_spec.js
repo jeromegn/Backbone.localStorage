@@ -300,7 +300,7 @@ describe("Backbone.localStorage", function(){
           throw error;
         };
 
-        // Indicate test only function.
+        // Indicate test only function (wiped on unpatch).
         window.localStorage.setItem._isTest = true;
       });
 
