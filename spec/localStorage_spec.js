@@ -274,19 +274,18 @@ describe("Backbone.localStorage", function(){
     describe("private browsing", function(){
 
       var model = new Model()
-        , error
-        , oldSetItem = window.localStorage.setItem;
+        , stub
+        , error;
 
       before(function(done){
         model.localStorage._clear();
 
-        // TODO MOCK
-        // TODO combine BEFORE
-        window.localStorage.setItem = function(){
+        // Mock browser conditions for private error.
+        stub = sinon.stub(window.localStorage, "setItem").throws(function(){
           var error = new Error();
           error.code = DOMException.QUOTA_EXCEEDED_ERR;
-          throw error;
-        };
+          return error;
+        }());
 
         // TODO MOCK & REMOVE LIB SHIM
         // Indicate test only function (wiped on unpatch).
@@ -312,8 +311,8 @@ describe("Backbone.localStorage", function(){
       });
 
       after(function(){
-        // TODO RESTORE MOCKS.
-        window.localStorage.setItem = oldSetItem;
+        // Unwrap stubs.
+        stub.restore();
       })
 
     });
