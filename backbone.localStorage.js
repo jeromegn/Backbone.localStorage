@@ -104,6 +104,20 @@ _.extend(Backbone.LocalStorage.prototype, {
   // fix for "illegal access" error on Android when JSON.parse is passed null
   jsonData: function (data) {
       return data && JSON.parse(data);
+  },
+
+  // Clear localStorage for specific collection.
+  _clear: function() {
+    var local = this.localStorage(),
+      itemRe = new RegExp("^" + this.name + "-");
+
+    // Remove id-tracking item (e.g., "foo").
+    local.removeItem(this.name);
+
+    // Match all data items (e.g., "foo-ID") and remove.
+    _.chain(local).keys()
+      .filter(function (k) { return itemRe.test(k); })
+      .each(function (k) { local.removeItem(k); });
   }
 
 });

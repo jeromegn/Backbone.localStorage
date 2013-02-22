@@ -8,19 +8,6 @@ describe("Backbone.localStorage", function(){
     number: 1337
   };
 
-  // Clear localStorage for specific collection.
-  var clearStorage = function (name) {
-    var itemRe = new RegExp("^" + name + "-");
-
-    // Remove id-tracking item (e.g., "foo").
-    window.localStorage.removeItem(name);
-
-    // Match all data items (e.g., "foo-ID") and remove.
-    _.chain(window.localStorage).keys()
-      .filter(function (k) { return itemRe.test(k); })
-      .each(function (k) { window.localStorage.removeItem(k); });
-  };
-
   describe("on a Collection", function(){
 
     var Model = Backbone.Model.extend({
@@ -37,7 +24,7 @@ describe("Backbone.localStorage", function(){
 
     // Clean up before starting
     before(function(){
-      clearStorage("collectionStore");
+      collection.localStorage._clear();
     });
 
     before(function(){
@@ -203,7 +190,7 @@ describe("Backbone.localStorage", function(){
     var model = new Model();
 
     before(function(){
-      clearStorage("modelStore");
+      model.localStorage._clear();
     });
 
     it("should use `localSync`", function(){
@@ -284,32 +271,31 @@ describe("Backbone.localStorage", function(){
       localStorage: new Backbone.LocalStorage("modelStore")
     });
 
-    before(function(){
-      clearStorage("modelStore");
-    });
-
     describe("private browsing", function(){
 
       var model = new Model()
+        , error
         , oldSetItem = window.localStorage.setItem;
 
-      before(function(){
+      before(function(done){
+        model.localStorage._clear();
+
+        // TODO MOCK
+        // TODO combine BEFORE
         window.localStorage.setItem = function(){
           var error = new Error();
           error.code = DOMException.QUOTA_EXCEEDED_ERR;
           throw error;
         };
 
+        // TODO MOCK & REMOVE LIB SHIM
         // Indicate test only function (wiped on unpatch).
         window.localStorage.setItem._isTest = true;
-      });
 
-      var error;
-
-      before(function(){
         model.save(attributes, {
           error: function(model, err){
             error = err;
+            done();
           }
         })
       });
@@ -326,13 +312,13 @@ describe("Backbone.localStorage", function(){
       });
 
       after(function(){
+        // TODO RESTORE MOCKS.
         window.localStorage.setItem = oldSetItem;
       })
 
     });
 
   });
-
 
 });
 
