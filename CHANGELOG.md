@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.3 - May 12, 2013
+
+- #79 Added CommonJS support
+
 ## 1.1.2 - May 12, 2013
 
 - #82 Upgraded Backbone to version 1.0 in test suite
