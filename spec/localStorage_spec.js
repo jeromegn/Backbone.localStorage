@@ -370,12 +370,3 @@ describe("AMD", function(){
   });
 
 });
-
-describe("CommonJS", function() {
-
-  var LocalStorage = require("../backbone.localStorage");
-
-  it("should be the same as the non-CommonJS usage", function(){
-    assert.equal(Backbone.LocalStorage, LocalStorage);
-  });
-});
