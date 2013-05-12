@@ -162,21 +162,21 @@ Backbone.LocalStorage.sync = window.Store.sync = Backbone.localSync = function(m
   }
 
   if (resp) {
-    model.trigger("sync", model, resp, options);
-    if (options && options.success)
+    if (options && options.success) {
       if (Backbone.VERSION === "0.9.10") {
         options.success(model, resp, options);
       } else {
         options.success(resp);
       }
-    if (syncDfd)
+    }
+    if (syncDfd) {
       syncDfd.resolve(resp);
-
+    }
+  
   } else {
     errorMessage = errorMessage ? errorMessage
                                 : "Record Not Found";
 
-    model.trigger("error", model, errorMessage, options);
     if (options && options.error)
       if (Backbone.VERSION === "0.9.10") {
         options.error(model, errorMessage, options);
