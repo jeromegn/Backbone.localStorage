@@ -1,4 +1,4 @@
-# Backbone localStorage Adapter v1.1.0
+# Backbone localStorage Adapter v1.1.3
 
 [![Build Status](https://secure.travis-ci.org/jeromegn/Backbone.localStorage.png?branch=master)](http://travis-ci.org/jeromegn/Backbone.localStorage)
 
@@ -61,8 +61,14 @@ require(["someCollection"], function(someCollection) {
   // ready to use someCollection
 });
 ```
-  
-Feel free to use Backbone as you usually would, this is a drop-in replacement.
+
+### CommonJS
+
+If you're using [browserify](https://github.com/substack/node-browserify).
+
+```javascript
+var Backbone.LocalStorage = require("Backbone.localStorage");
+```
 
 ## Contributing
 
