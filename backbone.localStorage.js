@@ -27,7 +27,7 @@
 
 // Generate four random hex digits.
 function S4() {
-   return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+   return Math.floor( (1+Math.random()) * 0x1000 ).toString(16);
 };
 
 // Generate a pseudo-GUID by concatenating random hexadecimal.
@@ -39,6 +39,9 @@ function guid() {
 // with a meaningful name, like the name you'd give a table.
 // window.Store is deprectated, use Backbone.LocalStorage instead
 Backbone.LocalStorage = window.Store = function(name) {
+  if( !this.localStorage ) {
+    throw "Backbone.localStorage: Environment does not support localStorage."
+  }
   this.name = name;
   var store = this.localStorage().getItem(this.name);
   this.records = (store && store.split(",")) || [];
