@@ -35,6 +35,16 @@ function guid() {
    return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
 };
 
+var hasLocalStorage = (function() {
+    var uid = new Date, storage, result;
+    try {
+        (storage = window.localStorage).setItem(uid, uid);
+        result = storage.getItem(uid) == uid;
+        storage.removeItem(uid);
+        return result && storage;
+    } catch(e) {}
+}());
+
 // Our Store is represented by a single JS object in *localStorage*. Create it
 // with a meaningful name, like the name you'd give a table.
 // window.Store is deprectated, use Backbone.LocalStorage instead
@@ -43,8 +53,10 @@ Backbone.LocalStorage = window.Store = function(name) {
     throw "Backbone.localStorage: Environment does not support localStorage."
   }
   this.name = name;
-  var store = this.localStorage().getItem(this.name);
-  this.records = (store && store.split(",")) || [];
+  if (hasLocalStorage) {
+    var store = this.localStorage().getItem(this.name);
+    this.records = (store && store.split(",")) || [];
+  }
 };
 
 _.extend(Backbone.LocalStorage.prototype, {
@@ -104,7 +116,9 @@ _.extend(Backbone.LocalStorage.prototype, {
   },
 
   localStorage: function() {
-    return localStorage;
+    if (hasLocalStorage) {
+        return localStorage;
+    }
   },
 
   // fix for "illegal access" error on Android when JSON.parse is passed null
