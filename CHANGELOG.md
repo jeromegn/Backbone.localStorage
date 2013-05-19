@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.4 - May 19, 2013
+
+- #90 Check for localStorage (throw an error if not available)
+
 ## 1.1.3 - May 12, 2013
 
 - #79 Added CommonJS support
