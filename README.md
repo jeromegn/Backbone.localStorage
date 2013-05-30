@@ -1,4 +1,4 @@
-# Backbone localStorage Adapter v1.1.0
+# Backbone localStorage Adapter v1.1.3
 
 [![Build Status](https://secure.travis-ci.org/jeromegn/Backbone.localStorage.png?branch=master)](http://travis-ci.org/jeromegn/Backbone.localStorage)
 
@@ -61,18 +61,22 @@ require(["someCollection"], function(someCollection) {
   // ready to use someCollection
 });
 ```
-  
-Feel free to use Backbone as you usually would, this is a drop-in replacement.
+
+### CommonJS
+
+If you're using [browserify](https://github.com/substack/node-browserify).
+
+```javascript
+var Backbone.LocalStorage = require("backbone.localstorage");
+```
 
 ## Contributing
 
 You'll need node and to `npm install` before being able to run the minification script.
 
 1. Fork;
-2. Write code;
-3. Write tests (or vice et versa);
+2. Write code, with tests;
 4. `make test` or `open spec/runner.html`;
-5. `make minify`;
 6. Create a pull request.
 
 Have fun!

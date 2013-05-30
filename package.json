@@ -1,15 +1,21 @@
 {
   "author": "Jerome Gravel-Niquet <jeromegn@gmail.com> (http://jgn.me)",
-  "name": "Backbone.localStorage",
-  "version": "1.1.0",
+  "name": "backbone.localstorage",
+  "version": "1.1.4",
   "repository": {
     "type": "git",
     "url": "git://github.com/jeromegn/Backbone.localStorage.git"
   },
+  "dependencies": {
+    "backbone": "~1.x.x",
+    "underscore": "~1.4.x"
+  },
   "devDependencies": {
     "uglify-js": "~1.2.6",
-    "mocha-phantomjs": "~1.1.2"
+    "mocha-phantomjs": "~1.1.2",
+    "browserify": "~2.x.x"
   },
+  "main": "./backbone.localStorage.js",
   "engines": {
     "node": "*"
   }

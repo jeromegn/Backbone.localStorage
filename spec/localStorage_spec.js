@@ -24,7 +24,7 @@ describe("Backbone.localStorage", function(){
 
     // Clean up before starting
     before(function(){
-      window.localStorage.clear();
+      collection.localStorage._clear();
     });
 
     before(function(){
@@ -41,7 +41,7 @@ describe("Backbone.localStorage", function(){
 
 
     describe("create", function(){
-      
+
       var model;
 
       before(function(){
@@ -65,7 +65,7 @@ describe("Backbone.localStorage", function(){
     });
 
     describe("get (by `id`)", function(){
-      
+
       var model;
 
       before(function(){
@@ -77,7 +77,7 @@ describe("Backbone.localStorage", function(){
       });
 
     });
-  
+
     describe("instances", function(){
 
       describe("save", function(){
@@ -119,7 +119,7 @@ describe("Backbone.localStorage", function(){
       });
 
       describe("destroy", function(){
-        
+
         var beforeFetchLength, afterFetchLength;
 
         before(function(){
@@ -153,7 +153,7 @@ describe("Backbone.localStorage", function(){
       });
 
       describe("with a different `idAttribute`", function(){
-        
+
         var Model2 = Backbone.Model.extend({
           defaults: attributes,
           idAttribute: "_id"
@@ -190,7 +190,7 @@ describe("Backbone.localStorage", function(){
     var model = new Model();
 
     before(function(){
-      window.localStorage.clear();
+      model.localStorage._clear();
     });
 
     it("should use `localSync`", function(){
@@ -219,7 +219,7 @@ describe("Backbone.localStorage", function(){
       });
 
       describe("with new attributes", function(){
-        
+
         before(function(){
           model.save({number: 42});
           model.fetch();
@@ -251,7 +251,7 @@ describe("Backbone.localStorage", function(){
     });
 
     describe("destroy", function(){
-      
+
       before(function(){
         model.destroy();
       });
@@ -271,29 +271,28 @@ describe("Backbone.localStorage", function(){
       localStorage: new Backbone.LocalStorage("modelStore")
     });
 
-    before(function(){
-      window.localStorage.clear();
-    });
-
     describe("private browsing", function(){
 
       var model = new Model()
         , oldSetItem = window.localStorage.setItem
+        , oldStorageSize = model.localStorage._storageSize
+        , error;
 
-      before(function(){
+      before(function(done){
+        model.localStorage._clear();
+
+        // Patch browser conditions for private error.
+        model.localStorage._storageSize = function(){ return 0; };
         window.localStorage.setItem = function(){
           var error = new Error();
           error.code = DOMException.QUOTA_EXCEEDED_ERR;
           throw error;
         };
-      });
 
-      var error;
-
-      before(function(){
         model.save(attributes, {
           error: function(model, err){
             error = err;
+            done();
           }
         })
       });
@@ -310,13 +309,14 @@ describe("Backbone.localStorage", function(){
       });
 
       after(function(){
+        // Unwrap patches.
+        model.localStorage._storageSize = oldStorageSize;
         window.localStorage.setItem = oldSetItem;
       })
 
     });
 
   });
-
 
 });
 
