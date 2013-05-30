@@ -160,7 +160,7 @@ Backbone.LocalStorage.sync = window.Store.sync = Backbone.localSync = function(m
     }
 
   } catch(error) {
-    if (error.code === DOMException.QUOTA_EXCEEDED_ERR && store._storageSize() === 0)
+    if (error.code === 22 && store._storageSize() === 0)
       errorMessage = "Private browsing is unsupported";
     else
       errorMessage = error.message;
