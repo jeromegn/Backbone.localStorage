@@ -1,4 +1,4 @@
-# Backbone localStorage Adapter v1.1.3
+# Backbone localStorage Adapter v1.1.5
 
 [![Build Status](https://secure.travis-ci.org/jeromegn/Backbone.localStorage.png?branch=master)](http://travis-ci.org/jeromegn/Backbone.localStorage)
 
