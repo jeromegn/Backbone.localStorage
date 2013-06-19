@@ -125,6 +125,8 @@ _.extend(Backbone.LocalStorage.prototype, {
     (_.chain || _)(local).keys()
       .filter(function (k) { return itemRe.test(k); })
       .each(function (k) { local.removeItem(k); });
+
+    this.records.length = 0;
   },
 
   // Size of localStorage.
@@ -177,7 +179,7 @@ Backbone.LocalStorage.sync = window.Store.sync = Backbone.localSync = function(m
     if (syncDfd) {
       syncDfd.resolve(resp);
     }
-  
+
   } else {
     errorMessage = errorMessage ? errorMessage
                                 : "Record Not Found";
