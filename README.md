@@ -72,7 +72,7 @@ var Backbone.LocalStorage = require("backbone.localstorage");
 
 ##Support
 
-If you're having a problem with using the project, post it in the support forum at CodersClan.
+If you're having a problem with using the project, get help at CodersClan.
 
 <a href="http://codersclan.net/forum/index.php?repo_id=67"><img src="http://www.codersclan.net/graphics/getSupport_blue_big.png" width="160"></a>
 
