@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.1.6 - July 2, 2013
+
+- Don't assume `require` is defined when `exports` is defined (#100)
+
+## 1.1.5 - At some point...
+
+- Can't remember...
+
 ## 1.1.4 - May 19, 2013
 
 - #90 Check for localStorage (throw an error if not available)
