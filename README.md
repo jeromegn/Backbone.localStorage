@@ -4,7 +4,7 @@
 
 Quite simply a localStorage adapter for Backbone. It's a drop-in replacement for Backbone.Sync() to handle saving to a localStorage database.
 
-Feel free to tip me on [gittip: jeromegn](https://www.gittip.com/jeromegn/)
+[![Gittip](http://badgr.co/gittip/jeromegn.png)](https://www.gittip.com/jeromegn/)
 
 ## Usage
 
