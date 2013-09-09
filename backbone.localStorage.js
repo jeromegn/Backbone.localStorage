@@ -38,11 +38,20 @@ function guid() {
 // Our Store is represented by a single JS object in *localStorage*. Create it
 // with a meaningful name, like the name you'd give a table.
 // window.Store is deprectated, use Backbone.LocalStorage instead
-Backbone.LocalStorage = window.Store = function(name) {
+Backbone.LocalStorage = window.Store = function(name, serializer) {
   if( !this.localStorage ) {
     throw "Backbone.localStorage: Environment does not support localStorage."
   }
   this.name = name;
+  this.serializer = serializer || {
+    serialize: function(item) {
+      return _.isObject(item) ? JSON.stringify(item) : item;
+    },
+    // fix for "illegal access" error on Android when JSON.parse is passed null
+    deserialize: function (data) {
+      return data && JSON.parse(data);
+    }
+  };
   var store = this.localStorage().getItem(this.name);
   this.records = (store && store.split(",")) || [];
 };
@@ -61,7 +70,7 @@ _.extend(Backbone.LocalStorage.prototype, {
       model.id = guid();
       model.set(model.idAttribute, model.id);
     }
-    this.localStorage().setItem(this.name+"-"+model.id, JSON.stringify(model));
+    this.localStorage().setItem(this.name+"-"+model.id, this.serializer.serialize(model));
     this.records.push(model.id.toString());
     this.save();
     return this.find(model);
@@ -69,7 +78,7 @@ _.extend(Backbone.LocalStorage.prototype, {
 
   // Update a model by replacing its copy in `this.data`.
   update: function(model) {
-    this.localStorage().setItem(this.name+"-"+model.id, JSON.stringify(model));
+    this.localStorage().setItem(this.name+"-"+model.id, this.serializer.serialize(model));
     if (!_.include(this.records, model.id.toString()))
       this.records.push(model.id.toString()); this.save();
     return this.find(model);
@@ -77,7 +86,7 @@ _.extend(Backbone.LocalStorage.prototype, {
 
   // Retrieve a model from `this.data` by id.
   find: function(model) {
-    return this.jsonData(this.localStorage().getItem(this.name+"-"+model.id));
+    return this.serializer.deserialize(this.localStorage().getItem(this.name+"-"+model.id));
   },
 
   // Return the array of all models currently in storage.
@@ -85,7 +94,7 @@ _.extend(Backbone.LocalStorage.prototype, {
     // Lodash removed _#chain in v1.0.0-rc.1
     return (_.chain || _)(this.records)
       .map(function(id){
-        return this.jsonData(this.localStorage().getItem(this.name+"-"+id));
+        return this.serializer.deserialize(this.localStorage().getItem(this.name+"-"+id));
       }, this)
       .compact()
       .value();
@@ -105,11 +114,6 @@ _.extend(Backbone.LocalStorage.prototype, {
 
   localStorage: function() {
     return localStorage;
-  },
-
-  // fix for "illegal access" error on Android when JSON.parse is passed null
-  jsonData: function (data) {
-      return data && JSON.parse(data);
   },
 
   // Clear localStorage for specific collection.
