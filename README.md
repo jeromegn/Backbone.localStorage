@@ -69,7 +69,7 @@ require(["someCollection"], function(someCollection) {
 If you're using [browserify](https://github.com/substack/node-browserify).
 
 ```javascript
-var Backbone.LocalStorage = require("backbone.localstorage");
+Backbone.LocalStorage = require("backbone.localstorage");
 ```
 
 ##Support
