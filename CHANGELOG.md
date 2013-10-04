@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.7 - October 4, 2013
+
+- Fix CommonJS requiring (Brandon Dimcheff)
+
 ## 1.1.6 - July 2, 2013
 
 - Don't assume `require` is defined when `exports` is defined (#100)
