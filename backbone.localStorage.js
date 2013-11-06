@@ -39,7 +39,7 @@ function guid() {
 // with a meaningful name, like the name you'd give a table.
 // window.Store is deprectated, use Backbone.LocalStorage instead
 Backbone.LocalStorage = window.Store = function(name) {
-  if( !this.localStorage ) {
+  if( !this.localStorage() ) {
     throw "Backbone.localStorage: Environment does not support localStorage."
   }
   this.name = name;
