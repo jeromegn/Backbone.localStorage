@@ -53,7 +53,7 @@ define("someCollection", ["localstorage"], function() {
         localStorage: new Backbone.LocalStorage("SomeCollection") // Unique name within your app.
     });
   
-    return new SomeCollection();
+    return SomeCollection;
 });
 ```
 
