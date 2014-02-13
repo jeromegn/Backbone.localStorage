@@ -15,6 +15,14 @@
     "mocha-phantomjs": "~1.1.2",
     "browserify": "~2.x.x"
   },
+  "keywords": [
+    "backbone",
+    "localstorage"
+    "local",
+    "storage",
+    "cache",
+    "sync"
+  ],
   "main": "./backbone.localStorage.js",
   "engines": {
     "node": "*"
