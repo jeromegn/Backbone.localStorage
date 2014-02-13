@@ -68,6 +68,8 @@ require(["SomeCollection"], function(SomeCollection) {
 
 If you're using [browserify](https://github.com/substack/node-browserify).
 
+Install using `npm install backbone.localstorage`, and require the module.
+
 ```javascript
 Backbone.LocalStorage = require("backbone.localstorage");
 ```
