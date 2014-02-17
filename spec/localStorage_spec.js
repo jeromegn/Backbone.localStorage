@@ -182,12 +182,18 @@ describe("Backbone.localStorage", function(){
 
   describe("on a Model", function(){
 
+    var Collection = Backbone.Collection.extend({
+      model: Model,
+      localStorage: new Backbone.LocalStorage("collectionStore")
+    });
+
     var Model = Backbone.Model.extend({
       defaults: attributes,
       localStorage: new Backbone.LocalStorage("modelStore")
     });
 
     var model = new Model();
+    var collection = new Collection;
 
     before(function(){
       model.localStorage._clear();
@@ -216,6 +222,11 @@ describe("Backbone.localStorage", function(){
 
       it("should be saved in the store", function(){
         assert.isDefined(model.id);
+      });
+
+      it("should be included in it's collection when saved", function(){
+        collection.fetch()
+        assert.equal(collection.models[0], model);
       });
 
       describe("with new attributes", function(){
