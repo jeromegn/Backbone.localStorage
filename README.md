@@ -48,25 +48,27 @@ require.config({
 
 Define your collection as a module:
 ```javascript
-define("someCollection", ["localstorage"], function() {
+define("SomeCollection", ["localstorage"], function() {
     var SomeCollection = Backbone.Collection.extend({
         localStorage: new Backbone.LocalStorage("SomeCollection") // Unique name within your app.
     });
   
-    return new SomeCollection();
+    return SomeCollection;
 });
 ```
 
 Require your collection:
 ```javascript
-require(["someCollection"], function(someCollection) {
-  // ready to use someCollection
+require(["SomeCollection"], function(SomeCollection) {
+  // ready to use SomeCollection
 });
 ```
 
 ### CommonJS
 
 If you're using [browserify](https://github.com/substack/node-browserify).
+
+Install using `npm install backbone.localstorage`, and require the module.
 
 ```javascript
 Backbone.LocalStorage = require("backbone.localstorage");

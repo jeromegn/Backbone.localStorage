@@ -2,5 +2,6 @@
   "name": "backbone.localStorage",
   "version": "1.1.7",
   "main": "./backbone.localStorage.js",
+  "scripts": ["./backbone.localStorage.js"],
   "dependencies": {}
 }

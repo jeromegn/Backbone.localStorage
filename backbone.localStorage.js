@@ -5,18 +5,17 @@
  * https://github.com/jeromegn/Backbone.localStorage
  */
 (function (root, factory) {
-   if (typeof exports === 'object' && typeof require === 'function') {
-     module.exports = factory(require("backbone"));
-   } else if (typeof define === "function" && define.amd) {
-      // AMD. Register as an anonymous module.
-      define(["backbone"], function(Backbone) {
-        // Use global variables if the locals are undefined.
-        return factory(Backbone || root.Backbone);
-      });
-   } else {
-      // RequireJS isn't being used. Assume underscore and backbone are loaded in <script> tags
-      factory(Backbone);
-   }
+  if (typeof exports === 'object' && typeof require === 'function') {
+    module.exports = factory(require("backbone"));
+  } else if (typeof define === "function" && define.amd) {
+    // AMD. Register as an anonymous module.
+    define(["backbone"], function(Backbone) {
+      // Use global variables if the locals are undefined.
+      return factory(Backbone || root.Backbone);
+    });
+  } else {
+    factory(Backbone);
+  }
 }(this, function(Backbone) {
 // A simple module to replace `Backbone.sync` with *localStorage*-based
 // persistence. Models are given GUIDS, and saved into a JSON object. Simple
@@ -49,11 +48,20 @@ function extend(obj, props) {
 // Our Store is represented by a single JS object in *localStorage*. Create it
 // with a meaningful name, like the name you'd give a table.
 // window.Store is deprectated, use Backbone.LocalStorage instead
-Backbone.LocalStorage = window.Store = function(name) {
+Backbone.LocalStorage = window.Store = function(name, serializer) {
   if( !this.localStorage ) {
     throw "Backbone.localStorage: Environment does not support localStorage."
   }
   this.name = name;
+  this.serializer = serializer || {
+    serialize: function(item) {
+      return _.isObject(item) ? JSON.stringify(item) : item;
+    },
+    // fix for "illegal access" error on Android when JSON.parse is passed null
+    deserialize: function (data) {
+      return data && JSON.parse(data);
+    }
+  };
   var store = this.localStorage().getItem(this.name);
   this.records = (store && store.split(",")) || [];
 };
@@ -72,7 +80,7 @@ extend(Backbone.LocalStorage.prototype, {
       model.id = guid();
       model.set(model.idAttribute, model.id);
     }
-    this.localStorage().setItem(this.name+"-"+model.id, JSON.stringify(model));
+    this.localStorage().setItem(this.name+"-"+model.id, this.serializer.serialize(model));
     this.records.push(model.id.toString());
     this.save();
     return this.find(model);
@@ -80,7 +88,7 @@ extend(Backbone.LocalStorage.prototype, {
 
   // Update a model by replacing its copy in `this.data`.
   update: function(model) {
-    this.localStorage().setItem(this.name+"-"+model.id, JSON.stringify(model));
+    this.localStorage().setItem(this.name+"-"+model.id, this.serializer.serialize(model));
     var modelId = model.id.toString();
     if (!contains(this.records, modelId)) {
       this.records.push(modelId);
@@ -91,7 +99,7 @@ extend(Backbone.LocalStorage.prototype, {
 
   // Retrieve a model from `this.data` by id.
   find: function(model) {
-    return this.jsonData(this.localStorage().getItem(this.name+"-"+model.id));
+    return this.serializer.deserialize(this.localStorage().getItem(this.name+"-"+model.id));
   },
 
   // Return the array of all models currently in storage.
@@ -99,6 +107,7 @@ extend(Backbone.LocalStorage.prototype, {
     var result = [];
     for (var i = 0, id, data; i < this.records.length; i++) {
       id = this.records[i];
+      data = this.serializer.deserialize(this.localStorage().getItem(this.name+"-"+id));
       data = this.jsonData(this.localStorage().getItem(this.name+"-"+id));
       if (data != null) result.push(data);
     }
@@ -122,11 +131,6 @@ extend(Backbone.LocalStorage.prototype, {
 
   localStorage: function() {
     return localStorage;
-  },
-
-  // fix for "illegal access" error on Android when JSON.parse is passed null
-  jsonData: function (data) {
-      return data && JSON.parse(data);
   },
 
   // Clear localStorage for specific collection.
