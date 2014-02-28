@@ -108,7 +108,6 @@ extend(Backbone.LocalStorage.prototype, {
     for (var i = 0, id, data; i < this.records.length; i++) {
       id = this.records[i];
       data = this.serializer.deserialize(this.localStorage().getItem(this.name+"-"+id));
-      data = this.jsonData(this.localStorage().getItem(this.name+"-"+id));
       if (data != null) result.push(data);
     }
     return result;
