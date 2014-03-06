@@ -83,7 +83,7 @@ extend(Backbone.LocalStorage.prototype, {
     this.localStorage().setItem(this.name+"-"+model.id, this.serializer.serialize(model));
     this.records.push(model.id.toString());
     this.save();
-    return this.find(model);
+    return this.find(model) !== false;
   },
 
   // Update a model by replacing its copy in `this.data`.
@@ -94,7 +94,7 @@ extend(Backbone.LocalStorage.prototype, {
       this.records.push(modelId);
       this.save();
     }
-    return this.find(model);
+    return this.find(model) !== false;
   },
 
   // Retrieve a model from `this.data` by id.
