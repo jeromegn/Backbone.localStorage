@@ -8,6 +8,10 @@ describe("Backbone.localStorage", function(){
     number: 1337
   };
 
+  var onError = function (model, resp, options) {
+    throw new Error(resp);
+  };
+
   describe("on a Collection", function(){
 
     var Model = Backbone.Model.extend({
@@ -21,6 +25,10 @@ describe("Backbone.localStorage", function(){
 
     var collection = new Collection();
 
+    // bind error handler
+    before(function(){
+      collection.on('error', onError);
+    })
 
     // Clean up before starting
     before(function(){
