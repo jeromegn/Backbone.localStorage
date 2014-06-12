@@ -115,8 +115,6 @@ extend(Backbone.LocalStorage.prototype, {
 
   // Delete a model from `this.data`, returning it.
   destroy: function(model) {
-    if (model.isNew())
-      return false
     this.localStorage().removeItem(this.name+"-"+model.id);
     var modelId = model.id.toString();
     for (var i = 0, id; i < this.records.length; i++) {
