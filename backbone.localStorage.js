@@ -80,7 +80,7 @@ extend(Backbone.LocalStorage.prototype, {
       model.id = guid();
       model.set(model.idAttribute, model.id);
     }
-    this.localStorage().setItem(this.name+"-"+model.id, this.serializer.serialize(model));
+    this.localStorage().setItem(this._itemName(model.id), this.serializer.serialize(model));
     this.records.push(model.id.toString());
     this.save();
     return this.find(model) !== false;
@@ -88,7 +88,7 @@ extend(Backbone.LocalStorage.prototype, {
 
   // Update a model by replacing its copy in `this.data`.
   update: function(model) {
-    this.localStorage().setItem(this.name+"-"+model.id, this.serializer.serialize(model));
+    this.localStorage().setItem(this._itemName(model.id), this.serializer.serialize(model));
     var modelId = model.id.toString();
     if (!contains(this.records, modelId)) {
       this.records.push(modelId);
@@ -99,7 +99,7 @@ extend(Backbone.LocalStorage.prototype, {
 
   // Retrieve a model from `this.data` by id.
   find: function(model) {
-    return this.serializer.deserialize(this.localStorage().getItem(this.name+"-"+model.id));
+    return this.serializer.deserialize(this.localStorage().getItem(this._itemName(model.id)));
   },
 
   // Return the array of all models currently in storage.
@@ -107,7 +107,7 @@ extend(Backbone.LocalStorage.prototype, {
     var result = [];
     for (var i = 0, id, data; i < this.records.length; i++) {
       id = this.records[i];
-      data = this.serializer.deserialize(this.localStorage().getItem(this.name+"-"+id));
+      data = this.serializer.deserialize(this.localStorage().getItem(this._itemName(id)));
       if (data != null) result.push(data);
     }
     return result;
@@ -115,7 +115,7 @@ extend(Backbone.LocalStorage.prototype, {
 
   // Delete a model from `this.data`, returning it.
   destroy: function(model) {
-    this.localStorage().removeItem(this.name+"-"+model.id);
+    this.localStorage().removeItem(this._itemName(model.id));
     var modelId = model.id.toString();
     for (var i = 0, id; i < this.records.length; i++) {
       if (this.records[i] === modelId) {
@@ -151,6 +151,10 @@ extend(Backbone.LocalStorage.prototype, {
   // Size of localStorage.
   _storageSize: function() {
     return this.localStorage().length;
+  },
+
+  _itemName: function(id) {
+    return this.name+"-"+id;
   }
 
 });
