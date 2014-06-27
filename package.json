@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "backbone": "~1.x.x",
-    "underscore": "^1.4.0"
+    "underscore": ">=1.4.0"
   },
   "devDependencies": {
     "uglify-js": "~1.2.6",
