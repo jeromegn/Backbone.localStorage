@@ -6,17 +6,17 @@
  */
 (function (root, factory) {
   if (typeof exports === 'object' && typeof require === 'function') {
-    module.exports = factory(require("backbone"));
+    module.exports = factory(require("backbone"), require('underscore'));
   } else if (typeof define === "function" && define.amd) {
     // AMD. Register as an anonymous module.
-    define(["backbone"], function(Backbone) {
+    define(["backbone", "underscore"], function(Backbone, _) {
       // Use global variables if the locals are undefined.
-      return factory(Backbone || root.Backbone);
+      return factory(Backbone || root.Backbone, _ || root._);
     });
   } else {
-    factory(Backbone);
+    factory(Backbone, _);
   }
-}(this, function(Backbone) {
+}(this, function(Backbone, _) {
 // A simple module to replace `Backbone.sync` with *localStorage*-based
 // persistence. Models are given GUIDS, and saved into a JSON object. Simple
 // as that.
