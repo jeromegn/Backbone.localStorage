@@ -1,10 +1,10 @@
 {
   "author": "Jerome Gravel-Niquet <jeromegn@gmail.com> (http://jgn.me)",
-  "name": "backbone.localstorage",
+  "name": "backbone.browserstorage",
   "version": "1.1.9",
   "repository": {
     "type": "git",
-    "url": "git://github.com/jeromegn/Backbone.localStorage.git"
+    "url": "git://github.com/jeromegn/Backbone.browserStorage.git"
   },
   "dependencies": {
     "backbone": "~1.x.x",
@@ -18,13 +18,15 @@
   },
   "keywords": [
     "backbone",
-    "localstorage",
+    "localStorage",
     "local",
+    "sessionStorage",
+    "session",
     "storage",
     "cache",
     "sync"
   ],
-  "main": "./backbone.localStorage.js",
+  "main": "./backbone.sessionStorage.js",
   "engines": {
     "node": "*"
   }
