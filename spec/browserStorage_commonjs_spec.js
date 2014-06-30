@@ -1,9 +1,9 @@
-describe("Backbone.localStorage in CommonJS environment", function() {
+describe("Backbone.browserStorage in CommonJS environment", function() {
 
-  var LocalStorage = require("../backbone.localStorage");
+  var BrowserStorage = require("../backbone.browserStorage");
   var Backbone = require("backbone");
 
   it("should be the same as the non-CommonJS usage", function(){
-    assert.equal(Backbone.LocalStorage, LocalStorage);
+    assert.equal(Backbone.BrowserStorage, BRowserStorage);
   });
 });

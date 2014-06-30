@@ -1,6 +1,4 @@
-
-
-describe("Backbone.localStorage", function(){
+describe("Backbone.browserStorage", function(){
 
   var attributes = {
     string: "String",
@@ -20,7 +18,7 @@ describe("Backbone.localStorage", function(){
 
     var Collection = Backbone.Collection.extend({
       model: Model,
-      localStorage: new Backbone.LocalStorage("collectionStore")
+      browserStorage: new Backbone.BrowserStorage.local("collectionStore")
     });
 
     var collection = new Collection();
@@ -28,11 +26,11 @@ describe("Backbone.localStorage", function(){
     // bind error handler
     before(function(){
       collection.on('error', onError);
-    })
+    });
 
     // Clean up before starting
     before(function(){
-      collection.localStorage._clear();
+      collection.browserStorage._clear();
     });
 
     before(function(){
@@ -99,7 +97,7 @@ describe("Backbone.localStorage", function(){
         before(function(){
           model = collection.create({});
           model.save({string: "String 0"});
-          collection.fetch()
+          collection.fetch();
         });
 
         it("should persist the changes", function(){
@@ -142,7 +140,7 @@ describe("Backbone.localStorage", function(){
           // Make sure there's at least items in there
           // ... can't rely on previous tests
           _(5).times(function(){
-            collection.create()
+            collection.create();
           });
         });
 
@@ -177,7 +175,7 @@ describe("Backbone.localStorage", function(){
 
         var Collection2 = Backbone.Collection.extend({
           model: Model2,
-          localStorage: new Backbone.LocalStorage("collection2Store")
+          browserStorage: new Backbone.BrowserStorage.local("collection2Store")
         });
 
         var collection2 = new Collection2();
@@ -200,13 +198,13 @@ describe("Backbone.localStorage", function(){
 
     var Model = Backbone.Model.extend({
       defaults: attributes,
-      localStorage: new Backbone.LocalStorage("modelStore")
+      browserStorage: new Backbone.BrowserStorage.local("modelStore")
     });
 
     var model = new Model();
 
     before(function(){
-      model.localStorage._clear();
+      model.browserStorage._clear();
     });
 
     it("should use `localSync`", function(){
@@ -277,7 +275,7 @@ describe("Backbone.localStorage", function(){
       });
 
       it("should have removed the instance from the store", function(){
-        assert.lengthOf(Model.prototype.localStorage.findAll(), 0);
+        assert.lengthOf(Model.prototype.browserStorage.findAll(), 0);
       });
 
     });
@@ -288,21 +286,21 @@ describe("Backbone.localStorage", function(){
 
     var Model = Backbone.Model.extend({
       defaults: attributes,
-      localStorage: new Backbone.LocalStorage("modelStore")
+      browserStorage: new Backbone.BrowserStorage.local("modelStore")
     });
 
     describe("private browsing", function(){
 
-      var model = new Model()
-        , oldSetItem = window.localStorage.setItem
-        , oldStorageSize = model.localStorage._storageSize
-        , error;
+      var model = new Model(),
+          oldSetItem = window.localStorage.setItem,
+          oldStorageSize = model.browserStorage._storageSize,
+          error;
 
       before(function(done){
-        model.localStorage._clear();
+        model.browserStorage._clear();
 
         // Patch browser conditions for private error.
-        model.localStorage._storageSize = function(){ return 0; };
+        model.browserStorage._storageSize = function(){ return 0; };
         window.localStorage.setItem = function(){
           var error = new Error();
           error.code = DOMException.QUOTA_EXCEEDED_ERR;
@@ -314,7 +312,7 @@ describe("Backbone.localStorage", function(){
             error = err;
             done();
           }
-        })
+        });
       });
 
       it("should return the error in the error callback", function(){
@@ -330,9 +328,9 @@ describe("Backbone.localStorage", function(){
 
       after(function(){
         // Unwrap patches.
-        model.localStorage._storageSize = oldStorageSize;
+        model.browserStorage._storageSize = oldStorageSize;
         window.localStorage.setItem = oldSetItem;
-      })
+      });
 
     });
 
@@ -340,11 +338,11 @@ describe("Backbone.localStorage", function(){
 
 });
 
-describe("Without Backbone.localStorage", function(){
+describe("Without Backbone.browserStorage", function(){
 
   describe("on a Collection", function(){
-    var Collection = Backbone.Collection.extend()
-      , collection = new Collection();
+    var Collection = Backbone.Collection.extend(),
+        collection = new Collection();
 
     it("should use `ajaxSync`", function(){
       assert.equal(Backbone.getSyncMethod(collection), Backbone.ajaxSync);
@@ -352,8 +350,8 @@ describe("Without Backbone.localStorage", function(){
   });
 
   describe("on a Model", function(){
-    var Model = Backbone.Model.extend()
-      , model = new Model();
+    var Model = Backbone.Model.extend(),
+        model = new Model();
 
     it("should use `ajaxSync`", function(){
       assert.equal(Backbone.getSyncMethod(model), Backbone.ajaxSync);
@@ -372,21 +370,21 @@ describe("AMD", function(){
       jquery: "support/jquery",
       underscore: "support/underscore",
       backbone: "support/backbone",
-      localstorage: "../backbone.localStorage"
+      browserstorage: "../backbone.browserStorage"
     }
   });
 
-  var LocalStorage;
+  var BrowserStorage;
 
   before(function(done){
-    require(["localstorage"], function(LS){
-      LocalStorage = LS;
-      done()
+    require(["browserstorage"], function(S){
+      BrowserStorage = S;
+      done();
     });
   });
 
   it("should be the same as the non-amd usage", function(){
-    assert.equal(Backbone.LocalStorage, LocalStorage)
+    assert.equal(Backbone.BrowserStorage, BrowserStorage);
   });
 
 });
