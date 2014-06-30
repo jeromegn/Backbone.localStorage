@@ -17,7 +17,8 @@ Create your collections like so:
 ```javascript
 window.SomeCollection = Backbone.Collection.extend({
   
-  browserStorage: new Backbone.BrowserStorage("SomeCollection"), // Unique name within your app.
+  // For localStorage, use BrowesrStorage.local.
+  browserStorage: new Backbone.BrowserStorage.session("SomeCollection"), // Unique name within your app.
   
   // ... everything else is normal.
   
@@ -47,7 +48,8 @@ Define your collection as a module:
 ```javascript
 define("SomeCollection", ["browserstorage"], function() {
     var SomeCollection = Backbone.Collection.extend({
-        browserStorage: new Backbone.BrowserStorage("SomeCollection") // Unique name within your app.
+        // For localStorage, use BrowserStorage.local.
+        browserStorage: new Backbone.BrowserStorage.session("SomeCollection") // Unique name within your app.
     });
   
     return SomeCollection;

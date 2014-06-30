@@ -1,8 +1,8 @@
 /**
- * Backbone browserStorage Adapter
- * Version 1.1.9
+ * Backbone localStorage and sessionStorage Adapter
+ * Version 0.0.1
  *
- * https://github.com/jeromegn/Backbone.browserStorage
+ * https://github.com/jcbrand/Backbone.browserStorage
  */
 (function (root, factory) {
   if (typeof exports === 'object' && typeof require === 'function') {
@@ -17,7 +17,7 @@
     factory(Backbone, _);
   }
 }(this, function(Backbone, _) {
-// A simple module to replace `Backbone.sync` with *browserStorage*-based
+// A simple module to replace `Backbone.sync` with *browser storage*-based
 // persistence. Models are given GUIDS, and saved into a JSON object. Simple
 // as that.
 
@@ -27,12 +27,12 @@
 // Generate four random hex digits.
 function S4() {
    return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
-};
+}
 
 // Generate a pseudo-GUID by concatenating random hexadecimal.
 function guid() {
    return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
-};
+}
 
 function contains(array, item) {
   var i = array.length;
@@ -41,36 +41,56 @@ function contains(array, item) {
 }
 
 function extend(obj, props) {
-  for (var key in props) obj[key] = props[key]
+  for (var key in props) { obj[key] = props[key]; }
   return obj;
 }
 
-// Our Store is represented by a single JS object in *browserStorage*. Create it
-// with a meaningful name, like the name you'd give a table.
-// window.Store is deprectated, use Backbone.LocalStorage instead
-Backbone.LocalStorage = window.Store = function(name, serializer) {
-  if( !this.browserStorage ) {
-    throw "Backbone.browserStorage: Environment does not support browserStorage."
-  }
-  this.name = name;
-  this.serializer = serializer || {
-    serialize: function(item) {
-      return _.isObject(item) ? JSON.stringify(item) : item;
-    },
-    // fix for "illegal access" error on Android when JSON.parse is passed null
-    deserialize: function (data) {
-      return data && JSON.parse(data);
+function _browserStorage (name, serializer, type) {
+    var _store;
+    if (type === 'local' && !window.localStorage ) {
+        throw "Backbone.browserStorage: Environment does not support localStorage.";
+    } else if (type === 'session' && !window.sessionStorage ) {
+        throw "Backbone.browserStorage: Environment does not support sessionStorage.";
     }
-  };
-  var store = this.browserStorage().getItem(this.name);
-  this.records = (store && store.split(",")) || [];
+    this.name = name;
+    this.serializer = serializer || {
+        serialize: function(item) {
+        return _.isObject(item) ? JSON.stringify(item) : item;
+        },
+        // fix for "illegal access" error on Android when JSON.parse is passed null
+        deserialize: function (data) {
+        return data && JSON.parse(data);
+        }
+    };
+
+    if (type === 'session') {
+        this.store = window.sessionStorage;
+    } else if (type === 'local') {
+        this.store = window.localStorage;
+    } else {
+        throw "Backbone.browserStorage: No storage type was specified";
+    }
+    _store = this.store.getItem(this.name);
+    this.records = (_store && _store.split(",")) || [];
+}
+
+// Our Store is represented by a single JS object in *localStorage* or *sessionStorage*.
+// Create it with a meaningful name, like the name you'd give a table.
+Backbone.BrowserStorage = {
+    local: function (name, serializer) {
+        return _browserStorage.bind(this, name, serializer, 'local')();
+    },
+    session: function (name, serializer) {
+        return _browserStorage.bind(this, name, serializer, 'session')();
+    }
 };
 
-extend(Backbone.LocalStorage.prototype, {
+// The browser's local and session stores will be extended with this obj.
+var _extension = {
 
-  // Save the current state of the **Store** to *browserStorage*.
+  // Save the current state of the **Store**
   save: function() {
-    this.browserStorage().setItem(this.name, this.records.join(","));
+    this.store.setItem(this.name, this.records.join(","));
   },
 
   // Add a model, giving it a (hopefully)-unique GUID, if it doesn't already
@@ -80,7 +100,7 @@ extend(Backbone.LocalStorage.prototype, {
       model.id = guid();
       model.set(model.idAttribute, model.id);
     }
-    this.browserStorage().setItem(this._itemName(model.id), this.serializer.serialize(model));
+    this.store.setItem(this._itemName(model.id), this.serializer.serialize(model));
     this.records.push(model.id.toString());
     this.save();
     return this.find(model) !== false;
@@ -88,7 +108,7 @@ extend(Backbone.LocalStorage.prototype, {
 
   // Update a model by replacing its copy in `this.data`.
   update: function(model) {
-    this.browserStorage().setItem(this._itemName(model.id), this.serializer.serialize(model));
+    this.store.setItem(this._itemName(model.id), this.serializer.serialize(model));
     var modelId = model.id.toString();
     if (!contains(this.records, modelId)) {
       this.records.push(modelId);
@@ -99,7 +119,7 @@ extend(Backbone.LocalStorage.prototype, {
 
   // Retrieve a model from `this.data` by id.
   find: function(model) {
-    return this.serializer.deserialize(this.browserStorage().getItem(this._itemName(model.id)));
+    return this.serializer.deserialize(this.store.getItem(this._itemName(model.id)));
   },
 
   // Return the array of all models currently in storage.
@@ -107,15 +127,15 @@ extend(Backbone.LocalStorage.prototype, {
     var result = [];
     for (var i = 0, id, data; i < this.records.length; i++) {
       id = this.records[i];
-      data = this.serializer.deserialize(this.browserStorage().getItem(this._itemName(id)));
-      if (data != null) result.push(data);
+      data = this.serializer.deserialize(this.store.getItem(this._itemName(id)));
+      if (data !== null) result.push(data);
     }
     return result;
   },
 
   // Delete a model from `this.data`, returning it.
   destroy: function(model) {
-    this.browserStorage().removeItem(this._itemName(model.id));
+    this.store.removeItem(this._itemName(model.id));
     var modelId = model.id.toString();
     for (var i = 0, id; i < this.records.length; i++) {
       if (this.records[i] === modelId) {
@@ -127,12 +147,15 @@ extend(Backbone.LocalStorage.prototype, {
   },
 
   browserStorage: function() {
-    return browserStorage;
+    return {
+        session: sessionStorage,
+        local: localStorage
+    };
   },
 
   // Clear browserStorage for specific collection.
   _clear: function() {
-    var local = this.browserStorage(),
+    var local = this.store,
       itemRe = new RegExp("^" + this.name + "-");
 
     // Remove id-tracking item (e.g., "foo").
@@ -150,19 +173,22 @@ extend(Backbone.LocalStorage.prototype, {
 
   // Size of browserStorage.
   _storageSize: function() {
-    return this.browserStorage().length;
+    return this.store.length;
   },
 
   _itemName: function(id) {
     return this.name+"-"+id;
   }
 
-});
+};
+
+extend(Backbone.BrowserStorage.session.prototype, _extension);
+extend(Backbone.BrowserStorage.local.prototype, _extension);
 
 // localSync delegate to the model or collection's
 // *browserStorage* property, which should be an instance of `Store`.
-// window.Store.sync and Backbone.localSync is deprecated, use Backbone.LocalStorage.sync instead
-Backbone.LocalStorage.sync = window.Store.sync = Backbone.localSync = function(method, model, options) {
+// window.Store.sync and Backbone.localSync is deprecated, use Backbone.BrowserStorage.sync instead
+Backbone.BrowserStorage.sync = Backbone.localSync = function(method, model, options) {
   var store = model.browserStorage || model.collection.browserStorage;
 
   var resp, errorMessage;
@@ -175,7 +201,7 @@ Backbone.LocalStorage.sync = window.Store.sync = Backbone.localSync = function(m
 
     switch (method) {
       case "read":
-        resp = model.id != undefined ? store.find(model) : store.findAll();
+        resp = model.id !== undefined ? store.find(model) : store.findAll();
         break;
       case "create":
         resp = store.create(model);
@@ -235,7 +261,6 @@ Backbone.getSyncMethod = function(model) {
   if(model.browserStorage || (model.collection && model.collection.browserStorage)) {
     return Backbone.localSync;
   }
-
   return Backbone.ajaxSync;
 };
 
@@ -245,5 +270,5 @@ Backbone.sync = function(method, model, options) {
   return Backbone.getSyncMethod(model).apply(this, [method, model, options]);
 };
 
-return Backbone.LocalStorage;
+return Backbone.BrowserStorage;
 }));
