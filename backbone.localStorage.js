@@ -6,17 +6,17 @@
  */
 (function (root, factory) {
   if (typeof exports === 'object' && typeof require === 'function') {
-    module.exports = factory(require("backbone"), require('underscore'));
+    module.exports = factory(require("backbone"));
   } else if (typeof define === "function" && define.amd) {
     // AMD. Register as an anonymous module.
-    define(["backbone", "underscore"], function(Backbone, _) {
+    define(["backbone"], function(Backbone) {
       // Use global variables if the locals are undefined.
-      return factory(Backbone || root.Backbone, _ || root._);
+      return factory(Backbone || root.Backbone);
     });
   } else {
-    factory(Backbone, _);
+    factory(Backbone);
   }
-}(this, function(Backbone, _) {
+}(this, function(Backbone) {
 // A simple module to replace `Backbone.sync` with *localStorage*-based
 // persistence. Models are given GUIDS, and saved into a JSON object. Simple
 // as that.
@@ -33,6 +33,10 @@ function S4() {
 function guid() {
    return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
 };
+
+function isObject(item) {
+  return item === Object(item);
+}
 
 function contains(array, item) {
   var i = array.length;
@@ -55,7 +59,7 @@ Backbone.LocalStorage = window.Store = function(name, serializer) {
   this.name = name;
   this.serializer = serializer || {
     serialize: function(item) {
-      return _.isObject(item) ? JSON.stringify(item) : item;
+      return isObject(item) ? JSON.stringify(item) : item;
     },
     // fix for "illegal access" error on Android when JSON.parse is passed null
     deserialize: function (data) {
