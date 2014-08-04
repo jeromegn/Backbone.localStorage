@@ -10,7 +10,7 @@
     "spec",
     "package.json",
     ".documentup.json",
-    ".travis.yml"
+    ".travis.yml",
     "CNAME",
     "Makefile"
   ]
