@@ -7,14 +7,14 @@
     "url": "git://github.com/jeromegn/Backbone.localStorage.git"
   },
   "dependencies": {
-    "backbone": "~1.x.x",
-    "underscore": ">=1.4.0"
+    "backbone": "~1.x.x"
   },
   "devDependencies": {
     "uglify-js": "~1.2.6",
     "mocha-phantomjs": "~1.1.2",
     "browserify": "~2.x.x",
-    "jquery": "~2.1.0"
+    "jquery": "~2.1.0",
+    "underscore": ">=1.4.0"
   },
   "keywords": [
     "backbone",
