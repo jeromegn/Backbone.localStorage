@@ -25,7 +25,7 @@ version = $(shell node -e "console.log(JSON.parse(require('fs').readFileSync('pa
 
 # npm publish, public-docs and tag
 publish :
-	npm publish
 	git push
 	git tag v$(version)
 	git push --tags origin master
+	npm publish
