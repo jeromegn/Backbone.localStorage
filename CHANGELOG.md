@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.1.12 - August 5, 2014
+## 1.1.13 - August 5, 2014
 
 - Forgot a comma, broke it for bower.
 

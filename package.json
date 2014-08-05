@@ -1,7 +1,7 @@
 {
   "author": "Jerome Gravel-Niquet <jeromegn@gmail.com> (http://jgn.me)",
   "name": "backbone.localstorage",
-  "version": "1.1.12",
+  "version": "1.1.13",
   "repository": {
     "type": "git",
     "url": "git://github.com/jeromegn/Backbone.localStorage.git"
