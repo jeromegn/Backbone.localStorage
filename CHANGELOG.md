@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.11 - August 5, 2014
+
+- Forgot a comma, broke it for bower.
+
 ## 1.1.10 - August 4, 2014
 
 - Various fixes, thanks everybody
