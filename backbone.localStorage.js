@@ -167,7 +167,14 @@ extend(Backbone.LocalStorage.prototype, {
 // *localStorage* property, which should be an instance of `Store`.
 // window.Store.sync and Backbone.localSync is deprecated, use Backbone.LocalStorage.sync instead
 Backbone.LocalStorage.sync = window.Store.sync = Backbone.localSync = function(method, model, options) {
-  var store = model.localStorage || model.collection.localStorage;
+  var store;
+  var lStore  = model.localStorage || model.collection.localStorage
+  // use localStorage as function return new Backbone.LocalStorage() with specifi statement for generate name
+  if (typeof lStore === 'function') {
+    store = lStore();
+  } else {
+    store = lStore;
+  }
 
   var resp, errorMessage;
   //If $ is having Deferred - use it.
