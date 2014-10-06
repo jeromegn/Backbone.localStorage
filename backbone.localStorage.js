@@ -80,7 +80,7 @@ extend(Backbone.LocalStorage.prototype, {
   // Add a model, giving it a (hopefully)-unique GUID, if it doesn't already
   // have an id of it's own.
   create: function(model) {
-    if (!model.id) {
+    if (!model.id && model.id !== 0) {
       model.id = guid();
       model.set(model.idAttribute, model.id);
     }
