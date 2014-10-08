@@ -21,9 +21,6 @@
 // persistence. Models are given GUIDS, and saved into a JSON object. Simple
 // as that.
 
-// Hold reference to Underscore.js and Backbone.js in the closure in order
-// to make things work even if they are removed from the global namespace
-
 // Generate four random hex digits.
 function S4() {
    return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
