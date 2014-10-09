@@ -1,8 +1,8 @@
 {
-  "name": "backbone.localStorage",
+  "name": "backbone-localStorage",
   "version": "1.1.13",
-  "main": "./backbone.localStorage.js",
-  "scripts": ["./backbone.localStorage.js"],
+  "main": "./backbone-localStorage.js",
+  "scripts": ["./backbone-localStorage.js"],
   "dependencies": {
     "jashkenas/backbone": "~1.0.0"
   },
