@@ -1,6 +1,6 @@
 /**
  * Backbone localStorage Adapter
- * Version 1.1.13
+ * Version 1.1.14
  *
  * https://github.com/jeromegn/Backbone.localStorage
  */
@@ -90,7 +90,7 @@ extend(Backbone.LocalStorage.prototype, {
     this.localStorage().setItem(this._itemName(model.id), this.serializer.serialize(model));
     this.records.push(model.id.toString());
     this.save();
-    return this.find(model) !== false;
+    return this.find(model);
   },
 
   // Update a model by replacing its copy in `this.data`.
@@ -101,7 +101,7 @@ extend(Backbone.LocalStorage.prototype, {
       this.records.push(modelId);
       this.save();
     }
-    return this.find(model) !== false;
+    return this.find(model);
   },
 
   // Retrieve a model from `this.data` by id.
