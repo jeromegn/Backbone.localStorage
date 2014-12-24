@@ -3,7 +3,7 @@
   "version": "1.1.13",
   "main": "./backbone.localStorage.js",
   "dependencies": {
-    "backbone": "^1 <1.2"
+    "backbone": "~1.x.x"
   },
   "ignore": [
     "examples",
