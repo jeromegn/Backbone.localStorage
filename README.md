@@ -27,12 +27,12 @@ window.SomeCollection = Backbone.Collection.extend({
 });
 ```
 
-If needed, you can use default ajax sync by passing the `ajaxSync` option flag:
+If needed, you can use default ajax sync by passing the `ajaxSync` option flag to any Backbone function which uses `Backbone.sync`, for example:
 
 ```javascript
-var myCollection = new SomeCollection();
-myCollection.fetch({ ajaxSync: true });
-myCollection.save({ new: "value" }, { ajaxSync: true });
+var myModel = new SomeModel();
+myModel.fetch({ ajaxSync: true });
+myModel.save({ new: "value" }, { ajaxSync: true });
 ```
 
 ### RequireJS
