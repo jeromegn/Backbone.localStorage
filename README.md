@@ -27,7 +27,7 @@ window.SomeCollection = Backbone.Collection.extend({
 });
 ```
 
-If needed, you can use default ajax sync by passing the `ajaxSync` option flag to any Backbone function which uses `Backbone.sync`, for example:
+If needed, you can use the default `Backbone.sync` (instead of local storage) by passing the `ajaxSync` option flag to any Backbone AJAX function, for example:
 
 ```javascript
 var myModel = new SomeModel();
