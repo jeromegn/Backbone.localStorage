@@ -39,8 +39,16 @@ describe("Backbone.localStorage", function(){
       collection.fetch();
     });
 
-    it("should use `localSync`", function(){
+    it("should default to use `localSync`", function(){
       assert.equal(Backbone.getSyncMethod(collection), Backbone.localSync);
+    });
+
+    it("should use `ajaxSync` when option is passed", function(){
+      assert.equal(Backbone.getSyncMethod(collection, { ajaxSync: true }), Backbone.ajaxSync);
+    });
+
+    it("should use `localSync` when other options are passed", function(){
+      assert.equal(Backbone.getSyncMethod(collection, { ajaxSync: false, data: {}, silent: true }), Backbone.localSync);
     });
 
     it("should initially be empty", function(){
@@ -213,6 +221,14 @@ describe("Backbone.localStorage", function(){
       assert.equal(Backbone.getSyncMethod(model), Backbone.localSync);
     });
 
+    it("should use `ajaxSync` when option is passed", function(){
+      assert.equal(Backbone.getSyncMethod(model, { ajaxSync: true }), Backbone.ajaxSync);
+    });
+
+    it("should use `localSync` when other options are passed", function(){
+      assert.equal(Backbone.getSyncMethod(model, { ajaxSync: false, data: {}, silent: true }), Backbone.localSync);
+    });
+
     describe("fetch", function(){
       it('should fire sync event on fetch', function(done) {
         var model = new Model(attributes);
@@ -348,6 +364,7 @@ describe("Without Backbone.localStorage", function(){
 
     it("should use `ajaxSync`", function(){
       assert.equal(Backbone.getSyncMethod(collection), Backbone.ajaxSync);
+      assert.equal(Backbone.getSyncMethod(collection, { ajaxSync: false }), Backbone.ajaxSync);
     });
   });
 
@@ -357,6 +374,7 @@ describe("Without Backbone.localStorage", function(){
 
     it("should use `ajaxSync`", function(){
       assert.equal(Backbone.getSyncMethod(model), Backbone.ajaxSync);
+      assert.equal(Backbone.getSyncMethod(model, { ajaxSync: false }), Backbone.ajaxSync);
     });
   });
 
