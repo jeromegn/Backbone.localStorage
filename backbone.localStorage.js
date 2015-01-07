@@ -239,7 +239,9 @@ Backbone.LocalStorage.sync = window.Store.sync = Backbone.localSync = function(m
 Backbone.ajaxSync = Backbone.sync;
 
 Backbone.getSyncMethod = function(model, options) {
-  if(model.localStorage || (model.collection && model.collection.localStorage) && !options.ajaxSync) {
+  var forceAjaxSync = options && options.ajaxSync;
+
+  if(!forceAjaxSync && (model.localStorage || (model.collection && model.collection.localStorage))) {
     return Backbone.localSync;
   }
 
