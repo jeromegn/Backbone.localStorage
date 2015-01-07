@@ -1,6 +1,6 @@
 /**
  * Backbone localStorage Adapter
- * Version 1.1.14
+ * Version 1.1.15
  *
  * https://github.com/jeromegn/Backbone.localStorage
  */
