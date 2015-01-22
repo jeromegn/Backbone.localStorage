@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.16 - January 22, 2015
+
+- Fix for #130. Uncaught TypeError: Cannot read property 'localStorage' of undefined
+
 ## 1.1.15 - January 7, 2015
 
 - You can now pass `{ajaxSync: true}` as an option to `fetch` and `save` to force remote syncing. (@adamterlson)
