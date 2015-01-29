@@ -56,21 +56,20 @@ function result(object, property) {
 // with a meaningful name, like the name you'd give a table.
 // window.Store is deprectated, use Backbone.LocalStorage instead
 Backbone.LocalStorage = window.Store = function(name, serializer) {
-  if( !this.localStorage ) {
-    throw "Backbone.localStorage: Environment does not support localStorage."
+  if( this.localStorage() ) {
+    this.name = name;
+    this.serializer = serializer || {
+      serialize: function (item) {
+        return isObject(item) ? JSON.stringify(item) : item;
+      },
+      // fix for "illegal access" error on Android when JSON.parse is passed null
+      deserialize: function (data) {
+        return data && JSON.parse(data);
+      }
+    };
+    var store = this.localStorage().getItem(this.name);
+    this.records = (store && store.split(",")) || [];
   }
-  this.name = name;
-  this.serializer = serializer || {
-    serialize: function(item) {
-      return isObject(item) ? JSON.stringify(item) : item;
-    },
-    // fix for "illegal access" error on Android when JSON.parse is passed null
-    deserialize: function (data) {
-      return data && JSON.parse(data);
-    }
-  };
-  var store = this.localStorage().getItem(this.name);
-  this.records = (store && store.split(",")) || [];
 };
 
 extend(Backbone.LocalStorage.prototype, {
@@ -134,7 +133,12 @@ extend(Backbone.LocalStorage.prototype, {
   },
 
   localStorage: function() {
-    return localStorage;
+    try {
+      return localStorage;
+    }
+    catch (e) {
+      return null;
+    }
   },
 
   // Clear localStorage for specific collection.
