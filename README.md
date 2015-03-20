@@ -109,7 +109,7 @@ Have fun!
 
 Licensed under MIT license
 
-Copyright (c) 2010 Jerome Gravel-Niquet
+Copyright (c) 2010-2015 Jerome Gravel-Niquet
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
