@@ -69,8 +69,7 @@ Backbone.LocalStorage = window.Store = function(name, serializer) {
       return data && JSON.parse(data);
     }
   };
-  var store = this.localStorage().getItem(this.name);
-  this.records = (store && store.split(",")) || [];
+  this._fetchRecords();
 };
 
 extend(Backbone.LocalStorage.prototype, {
@@ -111,13 +110,7 @@ extend(Backbone.LocalStorage.prototype, {
 
   // Return the array of all models currently in storage.
   findAll: function() {
-    // allow multi-tab working by re-fetching completely the collection on findAll
-    // fix: http://stackoverflow.com/questions/17096469/newly-saved-backbone-model-does-not-appear-in-collection-after-fetch
-    // fix: http://stackoverflow.com/questions/10927436/backbone-js-and-local-storage-with-multiple-browser-tabs-windows-overwrites-da
-    var store = this.localStorage().getItem(this.name);
-    this.records = (store && store.split(",")) || [];
-    // end of fix
-
+    this._fetchRecords();
     var result = [];
     for (var i = 0, id, data; i < this.records.length; i++) {
       id = this.records[i];
@@ -142,6 +135,11 @@ extend(Backbone.LocalStorage.prototype, {
 
   localStorage: function() {
     return localStorage;
+  },
+
+  _fetchRecords: function() {
+    var store = this.localStorage().getItem(this.name);
+    this.records = (store && store.split(",")) || [];
   },
 
   // Clear localStorage for specific collection.
