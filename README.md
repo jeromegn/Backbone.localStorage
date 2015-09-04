@@ -34,10 +34,11 @@ var myModel = new SomeModel();
 myModel.fetch({ ajaxSync: true });
 myModel.save({ new: "value" }, { ajaxSync: true });
 ```
+Example implementation can be found [here](http://backbonejs.org/docs/todos.html)
 
-### RequireJS
+### Usage with RequireJS
 
-Include [RequireJS](http://requirejs.org):
+Include [RequireJS](http://requirejs.org)
 
 ```html
 <script type="text/javascript" src="lib/require.js"></script>
