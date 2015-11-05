@@ -238,6 +238,6 @@ $(function(){
   });
 
   // Finally, we kick things off by creating the **App**.
-  var App = new AppView;
+  var App = new AppView();
 
 });
