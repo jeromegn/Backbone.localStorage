@@ -35,6 +35,30 @@ myModel.fetch({ ajaxSync: true });
 myModel.save({ new: "value" }, { ajaxSync: true });
 ```
 
+## Real world example 
+
+Here is a simple Javascript snippet of code about how you would access the collection models from the localStorage: 
+```javascript
+var LOCALSTORAGE_ITEM_NAME = 'myData';
+
+var collectionOfIDs = localStorage.getItem(LOCALSTORAGE_ITEM_NAME);
+// ',' is used to join model IDs in a single string stored in 
+// the previous variable collectionOfIDs 
+	collectionOfIDs = collectionOfIDs.split(',') 
+
+// To get each model for the localStorage, we have to get the item with the key 
+// key = Collection name(myData in this case) + 
+//                                        '-' + 
+// modelID(stored in the previous collectionOfIDs array)
+
+var models = collectionOfIDs.map(function(modelID){
+	return localStorage.getItem(LOCALSTORAGE_ITEM_NAME + '-' + modelID);
+});
+
+console.log('models stored under the collection myData are : ', models);
+
+```
+
 ### RequireJS
 
 Include [RequireJS](http://requirejs.org):
