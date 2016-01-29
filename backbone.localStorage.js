@@ -54,7 +54,7 @@ function result(object, property) {
 
 // Our Store is represented by a single JS object in *localStorage*. Create it
 // with a meaningful name, like the name you'd give a table.
-// window.Store is deprectated, use Backbone.LocalStorage instead
+// window.Store is deprecated, use Backbone.LocalStorage instead
 Backbone.LocalStorage = window.Store = function(name, serializer) {
   if( !this.localStorage ) {
     throw "Backbone.localStorage: Environment does not support localStorage."
@@ -81,7 +81,7 @@ extend(Backbone.LocalStorage.prototype, {
   },
 
   // Add a model, giving it a (hopefully)-unique GUID, if it doesn't already
-  // have an id of it's own.
+  // have an id of its own.
   create: function(model) {
     if (!model.id && model.id !== 0) {
       model.id = guid();
