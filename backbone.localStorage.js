@@ -97,9 +97,14 @@ extend(Backbone.LocalStorage.prototype, {
   update: function(model) {
     this.localStorage().setItem(this._itemName(model.id), this.serializer.serialize(model));
     var modelId = model.id.toString();
+    var modelPreviousId = model.previous(model.idAttribute);
     if (!contains(this.records, modelId)) {
       this.records.push(modelId);
       this.save();
+
+      if (modelPreviousId && modelId !== modelPreviousId.toString()) {
+        this.destroy({id: modelPreviousId});
+      }
     }
     return this.find(model);
   },
