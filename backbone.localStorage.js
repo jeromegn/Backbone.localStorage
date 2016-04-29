@@ -69,8 +69,7 @@ Backbone.LocalStorage = window.Store = function(name, serializer) {
       return data && JSON.parse(data);
     }
   };
-  var store = this.localStorage().getItem(this.name);
-  this.records = (store && store.split(",")) || [];
+  this._readRecords();
 };
 
 extend(Backbone.LocalStorage.prototype, {
@@ -162,6 +161,11 @@ extend(Backbone.LocalStorage.prototype, {
 
   _itemName: function(id) {
     return this.name+"-"+id;
+  },
+
+  _readRecords: function() {
+    var store = this.localStorage().getItem(this.name);
+    this.records = (store && store.split(",")) || [];
   }
 
 });
@@ -171,6 +175,7 @@ extend(Backbone.LocalStorage.prototype, {
 // window.Store.sync and Backbone.localSync is deprecated, use Backbone.LocalStorage.sync instead
 Backbone.LocalStorage.sync = window.Store.sync = Backbone.localSync = function(method, model, options) {
   var store = result(model, 'localStorage') || result(model.collection, 'localStorage');
+  store._readRecords();
 
   var resp, errorMessage;
   //If $ is having Deferred - use it.
