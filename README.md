@@ -1,10 +1,10 @@
-# Backbone localStorage Adapter v1.1.16
+# UNMAINTAINED - Backbone localStorage Adapter v1.1.16
+
+**Looking for a maintainer**
 
 [![Build Status](https://secure.travis-ci.org/jeromegn/Backbone.localStorage.png?branch=master)](http://travis-ci.org/jeromegn/Backbone.localStorage)
 
 Quite simply a localStorage adapter for Backbone. It's a drop-in replacement for Backbone.Sync() to handle saving to a localStorage database.
-
-[![Gittip](http://badgr.co/gittip/jeromegn.png)](https://www.gittip.com/jeromegn/)
 
 ## Usage
 
