@@ -139,6 +139,21 @@ describe("Backbone.localStorage", function(){
 
         });
 
+        describe("patch", function(){
+
+          var model;
+
+          before(function(){
+            model = collection.create({});
+            model.save({string: "String 0"});
+            collection.fetch();
+            model.save({ string: "String 1"}, { patch: true});
+          });
+
+          it("should be able to save with patch", function(){
+            assert.equal(model.get("string"), "String 1");
+          });
+        });
 
       });
 

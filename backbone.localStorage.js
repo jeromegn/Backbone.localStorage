@@ -187,6 +187,7 @@ Backbone.LocalStorage.sync = window.Store.sync = Backbone.localSync = function(m
       case "create":
         resp = store.create(model);
         break;
+      case "patch":
       case "update":
         resp = store.update(model);
         break;
