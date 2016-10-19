@@ -1,4 +1,4 @@
-// An example Backbone application contributed by
+﻿// An example Backbone application contributed by
 // [Jérôme Gravel-Niquet](http://jgn.me/). This demo uses a simple
 // [LocalStorage adapter](backbone-localstorage.html)
 // to persist Backbone models within your browser.
@@ -181,7 +181,7 @@ $(function(){
       this.footer = this.$('footer');
       this.main = $('#main');
 
-      Todos.fetch();
+      Todos.fetch({reset: true});
     },
 
     // Re-rendering the App just means refreshing the statistics -- the rest
