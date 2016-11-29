@@ -380,6 +380,20 @@ describe("Without Backbone.localStorage", function(){
 
 });
 
+describe("Unsupported browser", function() {
+    var FakeLocalStorage = function() {
+        Backbone.LocalStorage.apply(this, arguments);
+    };
+    FakeLocalStorage.prototype = _.clone(Backbone.LocalStorage.prototype);
+    FakeLocalStorage.prototype.localStorage = function() {
+        return undefined;
+    };
+
+    it("should throw exception", function() {
+        assert.throw(function() {new FakeLocalStorage()}, "Backbone.localStorage: Environment does not support localStorage.");
+    });
+
+});
 
 // For some reason this is not ran when viewed in a browser
 // but it is ran when using `mocha-phantomjs`.
