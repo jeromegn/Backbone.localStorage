@@ -1,3 +1,4 @@
+import {result} from 'underscore';
 
 /** Generates 4 random hex digits
  * @returns {string} 4 Random hex digits
@@ -12,4 +13,13 @@ function s4() {
  */
 export function guid() {
   return `${s4()}${s4()}-${s4()}-${s4()}-${s4()}-${s4()}${s4()}${s4()}`;
+}
+
+
+/** Returns the localStorage attribute for a model
+ * @param {Model} model - Model to get localStorage
+ * @returns {Storage} The localstorage
+ */
+export function getLocalStorage(model) {
+  return result(model, 'localStorage') || result(model.collection, 'localStorage');
 }

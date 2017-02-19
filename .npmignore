@@ -4,3 +4,4 @@ Makefile
 bower.json
 component.json
 CNAME
+coverage/
