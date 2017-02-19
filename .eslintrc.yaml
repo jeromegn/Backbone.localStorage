@@ -42,7 +42,6 @@ rules:
   keyword-spacing:
     - 2
   new-cap: 2
-  no-bitwise: 2
   no-caller: 2
   no-cond-assign:
     - 2

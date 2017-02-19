@@ -1,0 +1,15 @@
+
+/** Generates 4 random hex digits
+ * @returns {string} 4 Random hex digits
+*/
+function s4() {
+  const rand = (1 + Math.random()) * 0x10000;
+  return (rand | 0).toString(16).substring(1)
+}
+
+/** Generate a pseudo-guid
+ * @returns {string} A GUID-like string.
+ */
+export function guid() {
+  return `${s4()}${s4()}-${s4()}-${s4()}-${s4()}-${s4()}${s4()}${s4()}`;
+}
