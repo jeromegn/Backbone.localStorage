@@ -1,7 +1,14 @@
 'use strict';
 
 const path = require('path');
+const _ = require('underscore');
 
+
+const isProd = _.reduce(process.argv, function(memo, arg) {
+  return memo || arg === '--production' || arg === '-p';
+}, false);
+
+console.log(isProd);
 
 module.exports = {
   entry: {
@@ -25,7 +32,7 @@ module.exports = {
     ]
   },
   output: {
-    filename: 'backbone.localstorage.js',
+    filename: `backbone.localstorage${isProd ? '.min' : ''}.js`,
     path: path.resolve('build'),
     library: 'backbone.localstorage',
     libraryTarget: 'commonjs2'
