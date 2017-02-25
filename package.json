@@ -36,6 +36,7 @@
   },
   "scripts": {
     "build": "webpack",
+    "ci": "karma start --single-run --browsers firefox chromium",
     "debug": "test",
     "lint": "eslint",
     "test": "karma start --single-run",
