@@ -160,6 +160,16 @@ describe('LocalStorage Collection', function() {
       expect(parsed.string).to.be('String');
     });
 
+    it('reads from localStorage', function() {
+      const newCollection = new SavedCollection();
+      newCollection.fetch();
+
+      expect(newCollection.length).to.be(1);
+
+      const newModel = newCollection.at(0);
+      expect(newModel.get('string')).to.be('String');
+    });
+
     it('destroys models and removes from collection', function() {
       const parsed = JSON.parse(item);
       const newModel = mySavedCollection.get(parsed.id);
