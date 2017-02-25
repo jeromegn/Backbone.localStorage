@@ -40,7 +40,7 @@
     "compile": "webpack -p",
     "debug": "test",
     "lint": "eslint",
-    "test": "karma start --single-run",
+    "test": "karma start --single-run && eslint src test",
     "watch": "karma start"
   },
   "keywords": [
