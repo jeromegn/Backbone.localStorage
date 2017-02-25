@@ -1,4 +1,3 @@
-import {clone} from 'underscore';
 import root from 'window-or-global';
 import Bb from 'backbone';
 import {LocalStorage} from 'backbone.localstorage';
@@ -23,6 +22,11 @@ const AjaxModel = Bb.Model.extend({
 const SavedCollection = Bb.Collection.extend({
   model: AjaxModel,
   localStorage: new LocalStorage('SavedCollection')
+});
+
+const DifferentIdAttribute = Bb.Model.extend({
+  localStorage: new LocalStorage('DifferentId'),
+  idAttribute: 'number'
 });
 
 
@@ -71,6 +75,46 @@ describe('LocalStorage Model', function() {
       expect(newModel.get('string2')).to.be('String 2');
       expect(newModel.get('number')).to.be(1337);
     });
+
+    it('can be destroyed', function() {
+      mySavedModel.destroy();
+
+      const item = root.localStorage.getItem('SavedModel-10');
+      expect(item).to.be(null);
+    });
+  });
+});
+
+
+describe('Model with different idAttribute', function() {
+  let mySavedModel;
+
+  beforeEach(function() {
+    mySavedModel = new DifferentIdAttribute(attributes);
+  });
+
+  afterEach(function() {
+    mySavedModel = null;
+    root.localStorage.clear();
+  });
+
+  it('saves using the new value', function() {
+    mySavedModel.save();
+    const item = root.localStorage.getItem('DifferentId-1337');
+    const parsed = JSON.parse(item);
+
+    expect(item).to.not.be(null);
+    expect(parsed.string).to.be('String');
+  });
+
+  it('fetches using the new value', function() {
+    root.localStorage.setItem('DifferentId-1337', JSON.stringify(attributes));
+    const newModel = new DifferentIdAttribute({number: 1337});
+
+    newModel.fetch();
+    Bb.sync('read', newModel, {});
+    expect(newModel.id).to.be(1337);
+    expect(newModel.get('string')).to.be('String');
   });
 });
 
@@ -112,15 +156,19 @@ describe('LocalStorage Collection', function() {
 
     it('saves the right data', function() {
       const parsed = JSON.parse(item);
+      expect(parsed.id).to.equal(model.id);
       expect(parsed.string).to.be('String');
     });
 
-    it('can fetch a new value from localStorage', function() {
-      const newCollection = new SavedCollection();
-      newCollection.fetch();
+    it('destroys models and removes from collection', function() {
+      const parsed = JSON.parse(item);
+      const newModel = mySavedCollection.get(parsed.id);
+      newModel.destroy();
 
-      console.log(root.localStorage)
-      expect(newCollection.length).to.be(1);
+      const removed = root.localStorage.getItem(`SavedCollection-${parsed.id}`);
+
+      expect(removed).to.be(null);
+      expect(mySavedCollection.length).to.be(0);
     });
   });
 });

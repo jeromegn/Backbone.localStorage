@@ -21,15 +21,14 @@ function getDeferred() {
  * @param {Object} options - Options object, use `ajaxSync: true` to run the
  *  operation against the server in which case, options will also be passed into
  *  `jQuery.ajax`
+ * @returns {undefined}
  */
 export function sync(method, model, options = {}) {
   const store = getLocalStorage(model);
-
   let resp, errorMessage;
   const syncDfd = getDeferred();
 
   try {
-
     switch (method) {
       case 'read':
         resp = isUndefined(model.id) ? store.findAll() : store.find(model);

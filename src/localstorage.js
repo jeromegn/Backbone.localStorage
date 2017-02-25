@@ -1,6 +1,8 @@
 import root from 'window-or-global'
 import _ from 'underscore';
 
+import Bb from 'backbone';
+
 import {guid} from './utils';
 
 
@@ -39,6 +41,9 @@ export class LocalStorage {
     if (!this.localStorage) {
       throw 'Backbone.localStorage: Environment does not support localStorage.'
     }
+
+    const store = this.localStorage().getItem(this.name);
+    this.records = (store && store.split(',')) || [];
   }
 
   /** Return the global localStorage variable
@@ -149,6 +154,14 @@ export class LocalStorage {
    */
   _storageSize() {
     return this.localStorage().length;
+  }
+
+  /** Return the item from localStorage
+   * @param {string} name - Name to lookup
+   * @returns {string} Value from localStorage
+   */
+  _getItem(name) {
+    return this.localStorage().getItem(name);
   }
 
   /** Return the item name to lookup in localStorage
