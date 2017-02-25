@@ -76,6 +76,38 @@ describe('LocalStorage Model', function() {
       expect(newModel.get('number')).to.be(1337);
     });
 
+    it('can be updated', function() {
+      mySavedModel.save({
+        string: 'New String',
+        number2: 1234
+      });
+
+      expect(mySavedModel.pick('string', 'number2')).to.eql({
+        string: 'New String', 'number2': 1234
+      });
+    });
+
+    it('persists its update to localStorage', function() {
+      mySavedModel.save({
+        string: 'New String',
+        number2: 1234
+      });
+
+      const item = root.localStorage.getItem(`SavedModel-${mySavedModel.id}`);
+
+      expect(item).to.not.be(null);
+
+      const parsed = JSON.parse(item);
+
+      expect(parsed).to.eql({
+        string: 'New String',
+        string2: 'String 2',
+        id: 10,
+        number: 1337,
+        number2: 1234
+      });
+    });
+
     it('can be destroyed', function() {
       mySavedModel.destroy();
 
