@@ -1,8 +1,6 @@
 import root from 'window-or-global'
 import _ from 'underscore';
 
-import Bb from 'backbone';
-
 import {guid} from './utils';
 
 

@@ -5,13 +5,13 @@ import {getLocalStorage} from './utils'
 
 
 /** Get the Deferred status from $ if we have jQuery, otherwise use Backbone's
- *
+ *  @returns {boolean} - Whether the request was deferred
 */
 function getDeferred() {
   if (Bb.$) {
-    return Bb.$.Deferred && Bb.$.Deferred();
+    return result(Bb.$, 'Deferred', false);
   }
-  return Bb.Deferred && Bb.Deferred();
+  return result(Bb, 'Deferred', false);
 }
 
 
