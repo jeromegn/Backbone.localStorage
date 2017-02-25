@@ -28,7 +28,7 @@ module.exports = {
 
   resolve: {
     alias: {
-      'backbone.localstorage': path.resolve('src/driver.js')
+      'backbone.local': path.resolve('src/driver.js')
     }
   }
 };

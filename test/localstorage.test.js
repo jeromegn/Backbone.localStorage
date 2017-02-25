@@ -1,6 +1,6 @@
 import root from 'window-or-global';
 import Bb from 'backbone';
-import {LocalStorage} from 'backbone.localstorage';
+import {LocalStorage} from 'backbone.local';
 
 import expect from 'expect.js';
 
@@ -113,6 +113,15 @@ describe('LocalStorage Model', function() {
 
       const item = root.localStorage.getItem('SavedModel-10');
       expect(item).to.be(null);
+    });
+  });
+
+  it('can be converted to JSON', function() {
+    expect(mySavedModel.toJSON()).to.eql({
+      string: 'String',
+      id: 10,
+      number: 1337,
+      string2: 'String 2'
     });
   });
 });
