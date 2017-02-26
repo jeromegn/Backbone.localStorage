@@ -1,7 +1,7 @@
 {
   "author": "Scott Walton <s@cott.me.uk>",
   "name": "backbone.local",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -53,5 +53,5 @@
     "cache",
     "sync"
   ],
-  "main": "./build/backbone.localStorage.js"
+  "main": "./build/backbone.local.js"
 }
