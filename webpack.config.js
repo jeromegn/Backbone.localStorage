@@ -8,8 +8,6 @@ const isProd = _.reduce(process.argv, function(memo, arg) {
   return memo || arg === '--production' || arg === '-p';
 }, false);
 
-console.log(isProd);
-
 module.exports = {
   entry: {
     app: ['./src/driver.js']

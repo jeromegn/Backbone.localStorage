@@ -206,7 +206,6 @@ describe('LocalStorage Collection', function() {
       newCollection.fetch();
 
       expect(newCollection.length).to.be(1);
-
       const newModel = newCollection.at(0);
       expect(newModel.get('string')).to.be('String');
     });

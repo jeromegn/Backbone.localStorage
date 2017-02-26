@@ -40,7 +40,7 @@ export class LocalStorage {
       throw 'Backbone.local: Environment does not support localStorage.'
     }
 
-    const store = this.localStorage().getItem(this.name);
+    const store = this._getItem(this.name);
     this.records = (store && store.split(',')) || [];
   }
 
@@ -55,7 +55,7 @@ export class LocalStorage {
    * @returns {undefined}
    */
   save() {
-    this.localStorage().setItem(this.name, this.records.join(','));
+    this._setItem(this.name, this.records.join(','));
   }
 
   /** Add a new model with a unique GUID, if it doesn't already have its own ID
@@ -103,10 +103,10 @@ export class LocalStorage {
    * @returns {Array} The array of models stored
    */
   findAll() {
-    return _(this.records).map(
+    return _.chain(this.records).map(
       id => this.serializer.deserialize(this._getItem(this._itemName(id)))
       ).filter(
-        item => item != null);
+        item => item != null).value();
   }
 
   /** Delete a model from `this.data`, returning it.
