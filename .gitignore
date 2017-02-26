@@ -4,4 +4,4 @@ node_modules
 .idea
 npm-debug.log.*
 coverage/*
-build/*
+# build/*
