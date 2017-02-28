@@ -69,8 +69,7 @@ Backbone.LocalStorage = window.Store = function(name, serializer) {
       return data && JSON.parse(data);
     }
   };
-  var store = this.localStorage().getItem(this.name);
-  this.records = (store && store.split(",")) || [];
+  this._fetchRecords();
 };
 
 extend(Backbone.LocalStorage.prototype, {
@@ -111,6 +110,7 @@ extend(Backbone.LocalStorage.prototype, {
 
   // Return the array of all models currently in storage.
   findAll: function() {
+    this._fetchRecords();
     var result = [];
     for (var i = 0, id, data; i < this.records.length; i++) {
       id = this.records[i];
@@ -135,6 +135,11 @@ extend(Backbone.LocalStorage.prototype, {
 
   localStorage: function() {
     return localStorage;
+  },
+
+  _fetchRecords: function() {
+    var store = this.localStorage().getItem(this.name);
+    this.records = (store && store.split(",")) || [];
   },
 
   // Clear localStorage for specific collection.
