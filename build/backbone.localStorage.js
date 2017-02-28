@@ -72,13 +72,14 @@ module.exports =
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-
+/* WEBPACK VAR INJECTION */(function(global) {
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.guid = guid;
 exports.getLocalStorage = getLocalStorage;
+exports.getWindow = getWindow;
 
 var _underscore = __webpack_require__(1);
 
@@ -104,6 +105,14 @@ function guid() {
 function getLocalStorage(model) {
   return (0, _underscore.result)(model, 'localStorage') || (0, _underscore.result)(model.collection, 'localStorage');
 }
+
+/** Return the window or global object.
+ * @returns {window} Window object
+ */
+function getWindow() {
+  return (0, _underscore.isUndefined)(window) ? global : window;
+}
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6)))
 
 /***/ }),
 /* 1 */
@@ -178,17 +187,9 @@ exports.LocalStorage = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _windowOrGlobal = __webpack_require__(6);
-
-var _windowOrGlobal2 = _interopRequireDefault(_windowOrGlobal);
-
 var _underscore = __webpack_require__(1);
 
-var _underscore2 = _interopRequireDefault(_underscore);
-
 var _utils = __webpack_require__(0);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -200,7 +201,7 @@ var defaultSerializer = {
    * @returns {string} A JSON-encoded string
    */
   serialize: function serialize(item) {
-    return _underscore2.default.isObject(item) ? JSON.stringify(item) : item;
+    return (0, _underscore.isObject)(item) ? JSON.stringify(item) : item;
   },
 
 
@@ -247,7 +248,7 @@ var LocalStorage = exports.LocalStorage = function () {
   _createClass(LocalStorage, [{
     key: 'localStorage',
     value: function localStorage() {
-      return _windowOrGlobal2.default.localStorage;
+      return (0, _utils.getWindow)().localStorage;
     }
 
     /** Save the current status to localStorage
@@ -292,7 +293,7 @@ var LocalStorage = exports.LocalStorage = function () {
 
       var modelId = model.id.toString();
 
-      if (!_underscore2.default.contains(this.records, modelId)) {
+      if (!(0, _underscore.contains)(this.records, modelId)) {
         this.records.push(modelId);
         this.save();
       }
@@ -319,7 +320,7 @@ var LocalStorage = exports.LocalStorage = function () {
     value: function findAll() {
       var _this = this;
 
-      return _underscore2.default.chain(this.records).map(function (id) {
+      return (0, _underscore.chain)(this.records).map(function (id) {
         return _this.serializer.deserialize(_this._getItem(_this._itemName(id)));
       }).filter(function (item) {
         return item != null;
@@ -335,13 +336,9 @@ var LocalStorage = exports.LocalStorage = function () {
     key: 'destroy',
     value: function destroy(model) {
       this._removeItem(this._itemName(model.id));
-      var modelId = model.id.toString();
+      var newRecords = (0, _underscore.without)(this.records, model);
 
-      for (var i = 0; i < this.records.length; i++) {
-        if (this.records[i] === modelId) {
-          this.records.splice(i, 1);
-        }
-      }
+      this.records = newRecords;
       this.save();
 
       return model;
@@ -543,7 +540,28 @@ function sync(method, model) {
 /* 6 */
 /***/ (function(module, exports) {
 
-module.exports = require("window-or-global");
+var g;
+
+// This works in non-strict mode
+g = (function() {
+	return this;
+})();
+
+try {
+	// This works if eval is allowed (see CSP)
+	g = g || Function("return this")() || (1,eval)("this");
+} catch(e) {
+	// This works if the window reference is available
+	if(typeof window === "object")
+		g = window;
+}
+
+// g can still be undefined, but nothing to do about it...
+// We return undefined, instead of nothing here, so it's
+// easier to handle this case. if(!global) { ...}
+
+module.exports = g;
+
 
 /***/ }),
 /* 7 */

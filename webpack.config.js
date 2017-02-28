@@ -14,8 +14,7 @@ module.exports = {
   },
   externals: {
     backbone: true,
-    underscore: true,
-    'window-or-global': true
+    underscore: true
   },
   module: {
     loaders: [
