@@ -267,6 +267,27 @@ describe("Backbone.localStorage", function(){
 
       });
 
+      describe("with new id", function(){
+        var oldId = 0;
+      
+        before(function(){
+          oldId = model.id;
+          var attr = {number: 42};
+          attr[model.idAttribute] = 9999;
+          model.save(attr);
+          model.fetch();
+        });
+
+        it("should persist the changes", function(){
+          assert.deepEqual(model.toJSON(), _.extend(_.clone(attributes), {id: model.id, number: 42}));
+        });
+
+        it("should have removed the old id instance from the store", function(){
+          assert.isNull(Model.prototype.localStorage.find({id:oldId}), "Model with old id is still in localStorage");
+        });
+
+      });
+
       describe('fires events', function(){
         before(function(){
           this.model = new Model();
