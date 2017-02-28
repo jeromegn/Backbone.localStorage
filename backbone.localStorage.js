@@ -55,7 +55,12 @@ function result(object, property) {
 // Our Store is represented by a single JS object in *localStorage*. Create it
 // with a meaningful name, like the name you'd give a table.
 // window.Store is deprectated, use Backbone.LocalStorage instead
-Backbone.LocalStorage = window.Store = function(name, serializer) {
+Backbone.LocalStorage = window.Store = function(name, serializer, method) {
+  this.method = method || 'localStorage';
+  if( this.method !== 'localStorage' && this.method !== 'sessionStorage' ) {
+    throw "Backbone.localStorage: Method needs to be one of 'localStorage' or 'sessionStorage', not " + this.method
+  }
+
   if( !this.localStorage ) {
     throw "Backbone.localStorage: Environment does not support localStorage."
   }
@@ -134,7 +139,11 @@ extend(Backbone.LocalStorage.prototype, {
   },
 
   localStorage: function() {
-    return localStorage;
+    if (this.method === 'localStorage') {
+      return localStorage;
+    } else if (this.method === 'sessionStorage') {
+      return sessionStorage;
+    }
   },
 
   // Clear localStorage for specific collection.
