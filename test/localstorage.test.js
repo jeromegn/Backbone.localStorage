@@ -1,6 +1,6 @@
 import root from 'window-or-global';
 import Bb from 'backbone';
-import {LocalStorage} from 'backbone.local';
+import {LocalStorage} from 'backbone.localStorage';
 
 import expect from 'expect.js';
 
@@ -92,6 +92,27 @@ describe('LocalStorage Model', function() {
         string: 'New String',
         number2: 1234
       });
+
+      const item = root.localStorage.getItem(`SavedModel-${mySavedModel.id}`);
+
+      expect(item).to.not.be(null);
+
+      const parsed = JSON.parse(item);
+
+      expect(parsed).to.eql({
+        string: 'New String',
+        string2: 'String 2',
+        id: 10,
+        number: 1337,
+        number2: 1234
+      });
+    });
+
+    it('saves to localStorage with patch', function() {
+      mySavedModel.save({
+        string: 'New String',
+        number2: 1234
+      }, {patch: true});
 
       const item = root.localStorage.getItem(`SavedModel-${mySavedModel.id}`);
 

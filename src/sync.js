@@ -36,6 +36,7 @@ export function sync(method, model, options = {}) {
       case 'create':
         resp = store.create(model);
         break;
+      case 'patch':
       case 'update':
         resp = store.update(model);
         break;

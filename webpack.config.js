@@ -30,9 +30,9 @@ module.exports = {
     ]
   },
   output: {
-    filename: `backbone.local${isProd ? '.min' : ''}.js`,
+    filename: `backbone.localStorage${isProd ? '.min' : ''}.js`,
     path: path.resolve('build'),
-    library: 'backbone.local',
+    library: 'backbone.localStorage',
     libraryTarget: 'commonjs2'
   }
 };

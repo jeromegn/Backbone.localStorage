@@ -37,7 +37,7 @@ export class LocalStorage {
     this.serializer = serializer;
 
     if (!this.localStorage) {
-      throw 'Backbone.local: Environment does not support localStorage.'
+      throw 'Backbone.localStorage: Environment does not support localStorage.'
     }
 
     const store = this._getItem(this.name);
