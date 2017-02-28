@@ -6,12 +6,13 @@
  */
 (function (root, factory) {
   if (typeof exports === 'object' && typeof require === 'function') {
-    module.exports = factory(require("backbone"));
+    var Backbone = require("backbone");
+    module.exports = factory(Backbone.default || Backbone);
   } else if (typeof define === "function" && define.amd) {
     // AMD. Register as an anonymous module.
     define(["backbone"], function(Backbone) {
       // Use global variables if the locals are undefined.
-      return factory(Backbone || root.Backbone);
+      return factory(Backbone.default || Backbone || root.Backbone);
     });
   } else {
     factory(Backbone);

@@ -2,6 +2,8 @@
 
 **Looking for a maintainer**
 
+This fork exists for [PR #194](https://github.com/jeromegn/Backbone.localStorage/pull/194) which provides a minor change to the UMD module template allowing integration with JSPM / SystemJS & `backbone-es6`. ES6 classes export in a scoped `default` namespace which is the only thing changed in this fork. 
+
 [![Build Status](https://secure.travis-ci.org/jeromegn/Backbone.localStorage.png?branch=master)](http://travis-ci.org/jeromegn/Backbone.localStorage)
 
 Quite simply a localStorage adapter for Backbone. It's a drop-in replacement for Backbone.Sync() to handle saving to a localStorage database.
