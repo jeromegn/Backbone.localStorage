@@ -1,4 +1,4 @@
-import {result} from 'underscore';
+import {isUndefined, result} from 'underscore';
 
 /** Generates 4 random hex digits
  * @returns {string} 4 Random hex digits
@@ -22,4 +22,12 @@ export function guid() {
  */
 export function getLocalStorage(model) {
   return result(model, 'localStorage') || result(model.collection, 'localStorage');
+}
+
+
+/** Return the window or global object.
+ * @returns {window} Window object
+ */
+export function getWindow() {
+  return isUndefined(window) ? global : window;
 }

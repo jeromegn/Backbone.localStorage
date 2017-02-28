@@ -1,7 +1,6 @@
-import root from 'window-or-global'
-import _ from 'underscore';
+import {chain, contains, isObject, without} from 'underscore';
 
-import {guid} from './utils';
+import {getWindow, guid} from './utils';
 
 
 /** The default serializer for transforming your saved data to localStorage */
@@ -12,7 +11,7 @@ const defaultSerializer = {
    * @returns {string} A JSON-encoded string
    */
   serialize(item) {
-    return _.isObject(item) ? JSON.stringify(item) : item;
+    return isObject(item) ? JSON.stringify(item) : item;
   },
 
   /** Custom deserialization for data. This includes a fix for an Android bug
@@ -48,7 +47,7 @@ export class LocalStorage {
    * @returns {Object} Local Storage reference.
   */
   localStorage() {
-    return root.localStorage
+    return getWindow().localStorage
   }
 
   /** Save the current status to localStorage
@@ -84,7 +83,7 @@ export class LocalStorage {
 
     const modelId = model.id.toString();
 
-    if (!_.contains(this.records, modelId)) {
+    if (!contains(this.records, modelId)) {
       this.records.push(modelId);
       this.save();
     }
@@ -103,7 +102,7 @@ export class LocalStorage {
    * @returns {Array} The array of models stored
    */
   findAll() {
-    return _.chain(this.records).map(
+    return chain(this.records).map(
       id => this.serializer.deserialize(this._getItem(this._itemName(id)))
       ).filter(
         item => item != null).value();
@@ -115,13 +114,9 @@ export class LocalStorage {
   */
   destroy(model) {
     this._removeItem(this._itemName(model.id));
-    const modelId = model.id.toString();
+    const newRecords = without(this.records, model);
 
-    for (let i = 0; i < this.records.length; i++) {
-      if (this.records[i] === modelId) {
-        this.records.splice(i, 1);
-      }
-    }
+    this.records = newRecords;
     this.save();
 
     return model;

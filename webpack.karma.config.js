@@ -1,4 +1,5 @@
 const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   entry: './src/driver.js',
@@ -8,14 +9,14 @@ module.exports = {
         test: /\.js$/,
         exclude: /node_modules/,
         loader: 'babel-loader',
-        query: {
+        options: {
           presets: ['es2015']
         }
       },
       {
         test: /\.test\.js$/,
         loader: 'babel-loader',
-        query: {
+        options: {
           presets: ['es2015']
         }
       }
@@ -30,5 +31,9 @@ module.exports = {
     alias: {
       'backbone.localStorage': path.resolve('src/driver.js')
     }
-  }
+  },
+
+  plugins: [
+    new HtmlWebpackPlugin({ title: 'Tree-shaking' })
+  ]
 };

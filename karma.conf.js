@@ -1,6 +1,31 @@
 // Karma configuration
 // Generated on Sun Feb 19 2017 21:14:14 GMT+0000 (GMT)
 
+const coverageReporters = [{
+  type: 'text-summary'
+}];
+
+const reporters = [
+  'progress',
+  'coverage'
+];
+
+if (process.env.TRAVIS) {
+  console.log('On Travis sending coveralls');
+  coverageReporters.push({
+    type: 'lcov',
+    dir: 'coverage'
+  });
+  reporters.push('coveralls');
+} else {
+  console.log('Not on Travis so not sending coveralls');
+  coverageReporters.push({
+    type: 'html',
+    dir: 'coverage',
+    subdir: '.'
+  });
+}
+
 module.exports = function(config) {
   config.set({
 
@@ -15,20 +40,22 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      'test/*.test.js'
+      'test/*.test.js',
+      'src/*.js'
     ],
 
 
     // list of files to exclude
     exclude: [
+      // 'node_modules/**/*'
     ],
 
 
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-      'test/**/*.test.js': ['webpack'],
-      'build/*.js': ['coverage']
+      'test/*.test.js': ['webpack'],
+      'src/*.js': ['webpack', 'coverage']
     },
 
     webpack: require('./webpack.karma.config'),
@@ -37,8 +64,11 @@ module.exports = function(config) {
     // test results reporter to use
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ['progress', 'coverage'],
+    reporters: reporters,
 
+    coverageReporter: {
+      reporters: coverageReporters
+    },
 
     // web server port
     port: 9876,
