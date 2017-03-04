@@ -1,6 +1,5 @@
 import root from 'window-or-global';
 import Bb from 'backbone';
-import {clone} from 'underscore';
 import {LocalStorage} from 'backbone.localStorage';
 
 import expect from 'expect.js';
@@ -31,12 +30,6 @@ const SavedCollection = Bb.Collection.extend({
 const DifferentIdAttribute = Bb.Model.extend({
   localStorage: new LocalStorage('DifferentId'),
   idAttribute: 'number'
-});
-
-
-const SavedModelCollection = Bb.Collection.extend({
-  model: SavedModel,
-  localStorage: new LocalStorage('SavedModelCollection')
 });
 
 describe('LocalStorage Model', function() {
