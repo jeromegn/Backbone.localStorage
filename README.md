@@ -3,9 +3,12 @@
 An adapter that replaces `Backbone.sync` to save to `window.localStorage`
 instead of to the server.
 
+**Note** Backbone LocalStorage v2 changes the API to work more with ES6 modules.
+See [Upgrade Notes](#upgrade-notes) for more details.
+
 ## Usage
 
-Import `backbone.local` and attach it to your models and collections:
+Import `backbone.localstorage` and attach it to your models and collections:
 
 ```javascript
 import {Collection, Model} from 'backbone';
@@ -37,6 +40,42 @@ myModel.save({
 }, {
   ajaxSync: true  // Pushes back to the server
 });
+```
+
+## Upgrade Notes
+
+Backbone LocalStorage is now built using ES6. It should be fully compatible with
+v1 with one difference: Instead of exporting the `LocalStorage` class as a
+default module, v2 exports it as a named variable. Below are examples covering
+the changes:
+
+### JavaScript ES5
+
+In v1:
+
+```javascript
+var LocalStorage = require('backbone.localstorage');
+```
+
+In v2:
+
+```javascript
+var localStorage = require('backbone.localstorage');
+var LocalStorage = localStorage.LocalStorage;
+```
+
+### JavaScript ES6+
+
+In v1:
+
+```javascript
+import LocalStorage from 'backbone.localstorage';
+```
+
+In v2:
+
+```javascript
+import {LocalStorage} from 'backbone.localstorage';
 ```
 
 ## Contributing
