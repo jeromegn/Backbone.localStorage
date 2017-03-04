@@ -8,7 +8,7 @@ const coverageReporters = [{
 
 const reporters = [
   'progress',
-  'coverage'
+  'coverage-istanbul'
 ];
 
 if (process.env.TRAVIS) {
@@ -20,6 +20,11 @@ if (process.env.TRAVIS) {
   reporters.push('coveralls');
 } else {
   console.log('Not on Travis so not sending coveralls');
+  coverageReporters.push({
+    type: 'html',
+    dir: 'coverage',
+    subdir: '.'
+  });
 }
 
 module.exports = function(config) {
