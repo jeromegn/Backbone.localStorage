@@ -1,125 +1,96 @@
-# UNMAINTAINED - Backbone localStorage Adapter v1.1.16
+# Backbone localStorage Backend
 
-**Looking for a maintainer**
+An adapter that replaces `Backbone.sync` to save to `window.localStorage`
+instead of to the server.
 
-[![Build Status](https://secure.travis-ci.org/jeromegn/Backbone.localStorage.png?branch=master)](http://travis-ci.org/jeromegn/Backbone.localStorage)
-
-Quite simply a localStorage adapter for Backbone. It's a drop-in replacement for Backbone.Sync() to handle saving to a localStorage database.
+**Note** Backbone LocalStorage v2 changes the API to work more with ES6 modules.
+See [Upgrade Notes](#upgrade-notes) for more details.
 
 ## Usage
 
-Include Backbone.localStorage after having included Backbone.js:
-
-```html
-<script type="text/javascript" src="backbone.js"></script>
-<script type="text/javascript" src="backbone.localStorage.js"></script>
-```
-
-Create your collections like so:
+Import `backbone.localstorage` and attach it to your models and collections:
 
 ```javascript
-window.SomeCollection = Backbone.Collection.extend({
-  
-  localStorage: new Backbone.LocalStorage("SomeCollection"), // Unique name within your app.
-  
-  // ... everything else is normal.
-  
+import {Collection, Model} from 'backbone';
+import {LocalStorage} from 'backbone.localstorage';
+
+const SomeCollection = Collection.extend({
+
+  localStorage: new LocalStorage('SomeCollection'), // Uniquely identify this
+
+});
+
+const SomeModel = Model.extend({
+
+  localStorage: new LocalStorage('SomeModel')
+
 });
 ```
 
-If needed, you can use the default `Backbone.sync` (instead of local storage) by passing the `ajaxSync` option flag to any Backbone AJAX function, for example:
+To synchronise with the server, you can pass the `ajaxSync` flag to any options:
 
 ```javascript
-var myModel = new SomeModel();
-myModel.fetch({ ajaxSync: true });
-myModel.save({ new: "value" }, { ajaxSync: true });
-```
+const myModel = new SomeModel();
+myModel.fetch({
+  ajaxSync: true  // Fetches from the server
+});
 
-### RequireJS
-
-Include [RequireJS](http://requirejs.org):
-
-```html
-<script type="text/javascript" src="lib/require.js"></script>
-```
-
-RequireJS config: 
-```javascript
-require.config({
-    paths: {
-        jquery: "lib/jquery",
-        underscore: "lib/underscore",
-        backbone: "lib/backbone",
-        localstorage: "lib/backbone.localStorage"
-    }
+myModel.save({
+  new: "value"
+}, {
+  ajaxSync: true  // Pushes back to the server
 });
 ```
 
-Define your collection as a module:
+## Upgrade Notes
+
+Backbone LocalStorage is now built using ES6. It should be fully compatible with
+v1 with one difference: Instead of exporting the `LocalStorage` class as a
+default module, v2 exports it as a named variable. Below are examples covering
+the changes:
+
+### JavaScript ES5
+
+In v1:
+
 ```javascript
-define("SomeCollection", ["localstorage"], function() {
-    var SomeCollection = Backbone.Collection.extend({
-        localStorage: new Backbone.LocalStorage("SomeCollection") // Unique name within your app.
-    });
-  
-    return SomeCollection;
-});
+var LocalStorage = require('backbone.localstorage');
 ```
 
-Require your collection:
+In v2:
+
 ```javascript
-require(["SomeCollection"], function(SomeCollection) {
-  // ready to use SomeCollection
-});
+var localStorage = require('backbone.localstorage');
+var LocalStorage = localStorage.LocalStorage;
 ```
 
-### CommonJS
+### JavaScript ES6+
 
-If you're using [browserify](https://github.com/substack/node-browserify).
-
-Install using `npm install backbone.localstorage`, and require the module.
+In v1:
 
 ```javascript
-Backbone.LocalStorage = require("backbone.localstorage");
+import LocalStorage from 'backbone.localstorage';
+```
+
+In v2:
+
+```javascript
+import {LocalStorage} from 'backbone.localstorage';
 ```
 
 ## Contributing
 
-You'll need node and to `npm install` before being able to run the minification script.
+Install NodeJS and run `yarn` or `npm i` to get your dependencies, then:
 
-1. Fork;
-2. Write code, with tests;
-3. `make test` or `open spec/runner.html`;
-4. Create a pull request.
+1. Open an issue identifying the fault
+2. Provide a fix, with tests demonstrating the issue
+3. Run `npm test`
+4. Create a pull request
 
-Have fun!
 
 ## Acknowledgments
 
+- [Mark Woodall](https://github.com/llad): Initial tests (now refactored);
+- [Martin Häcker](https://github.com/dwt): Many fixes and the test isolation.
 - [Mark Woodall](https://github.com/llad): initial tests (now refactored);
 - [Martin Häcker](https://github.com/dwt): many fixes and the test isolation.
-
-## License
-
-Licensed under MIT license
-
-Copyright (c) 2010-2015 Jerome Gravel-Niquet
-
-Permission is hereby granted, free of charge, to any person obtaining
-a copy of this software and associated documentation files (the
-"Software"), to deal in the Software without restriction, including
-without limitation the rights to use, copy, modify, merge, publish,
-distribute, sublicense, and/or sell copies of the Software, and to
-permit persons to whom the Software is furnished to do so, subject to
-the following conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
