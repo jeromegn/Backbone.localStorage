@@ -1,6 +1,7 @@
 // Karma configuration
 // Generated on Sun Feb 19 2017 21:14:14 GMT+0000 (GMT)
 
+const path = require('path');
 const coverageReporters = [{
   type: 'text-summary'
 }];
@@ -19,11 +20,6 @@ if (process.env.TRAVIS) {
   reporters.push('coveralls');
 } else {
   console.log('Not on Travis so not sending coveralls');
-  coverageReporters.push({
-    type: 'html',
-    dir: 'coverage',
-    subdir: '.'
-  });
 }
 
 module.exports = function(config) {
@@ -40,8 +36,7 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      'test/*.test.js',
-      'src/*.js'
+      'test/*.test.js'
     ],
 
 
@@ -54,11 +49,40 @@ module.exports = function(config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-      'test/*.test.js': ['webpack'],
-      'src/*.js': ['webpack', 'coverage']
+      'test/*.test.js': ['webpack']
     },
 
-    webpack: require('./webpack.karma.config'),
+    webpack: {
+      devtool: 'inline-source-map',
+      module: {
+        loaders: [
+          {
+            test: /\.js$/,
+            exclude: /node_modules/,
+            loader: 'babel-loader',
+            options: {
+              presets: ['es2015']
+            }
+          },
+          {
+            test: /\.js$/,
+            include: /src\/.*\.js$/,
+            loader: 'istanbul-instrumenter-loader',
+            enforce: 'post'
+          }
+        ]
+      },
+      output: {
+        path: path.resolve('test'),
+        filename: 'test.out.js'
+      },
+
+      resolve: {
+        alias: {
+          'backbone.localStorage': path.resolve('src/driver.js')
+        }
+      }
+},
 
 
     // test results reporter to use

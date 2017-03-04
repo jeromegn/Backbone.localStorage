@@ -18,6 +18,7 @@
     "eslint": "^3.15.0",
     "expect.js": "^0.3.1",
     "html-webpack-plugin": "^2.28.0",
+    "istanbul-instrumenter-loader": "^2.0.0",
     "jquery": "~3.1.1",
     "karma": "^1.4.1",
     "karma-chrome-launcher": "^2.0.0",
