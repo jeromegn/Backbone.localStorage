@@ -211,7 +211,7 @@ describe('Model with different idAttribute', function() {
     const newModel = new DifferentIdAttribute({number: 1337});
 
     newModel.fetch();
-    Bb.sync('read', newModel, {});
+
     expect(newModel.id).to.be(1337);
     expect(newModel.get('string')).to.be('String');
   });
