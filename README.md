@@ -51,7 +51,6 @@ Install NodeJS and run `yarn` or `npm i` to get your dependencies, then:
 
 ## Acknowledgments
 
-- [Jerome Gravel-Niquet](https://github.com/jeromegn): Wrote the initial `backbone.localstorage`
 - [Mark Woodall](https://github.com/llad): Initial tests (now refactored);
 - [Martin Häcker](https://github.com/dwt): Many fixes and the test isolation.
 - [Mark Woodall](https://github.com/llad): initial tests (now refactored);
