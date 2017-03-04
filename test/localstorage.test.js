@@ -66,6 +66,18 @@ describe('LocalStorage Model', function() {
     });
   });
 
+  describe('if not saved', function() {
+    it('will pass error callbacks from fetch', function(done) {
+      mySavedModel.fetch({
+        error(model, resp) {
+          expect(model).to.equal(mySavedModel);
+          expect(resp).to.equal('Record Not Found');
+          done();
+        }
+      });
+    });
+  });
+
   describe('once saved', function() {
     beforeEach(function() {
       mySavedModel.save();
@@ -85,6 +97,15 @@ describe('LocalStorage Model', function() {
       expect(newModel.get('string')).to.be('String');
       expect(newModel.get('string2')).to.be('String 2');
       expect(newModel.get('number')).to.be(1337);
+    });
+
+    it('passes fetch calls to success', function(done) {
+      mySavedModel.fetch({
+        success(model, response, options) {
+          expect(model).to.equal(mySavedModel);
+          done();
+        }
+      });
     });
 
     it('can be updated', function() {
