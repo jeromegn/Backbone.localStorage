@@ -1,8 +1,10 @@
 import root from 'window-or-global';
 import Bb from 'backbone';
+import {clone} from 'underscore';
 import {LocalStorage} from 'backbone.localStorage';
 
 import expect from 'expect.js';
+import {stub} from 'sinon';
 
 const attributes = {
   string: 'String',
@@ -12,7 +14,9 @@ const attributes = {
 
 const SavedModel = Bb.Model.extend({
   localStorage: new LocalStorage('SavedModel'),
-  defaults: attributes
+  defaults: attributes,
+
+  urlRoot: '/test/'
 });
 
 const AjaxModel = Bb.Model.extend({
@@ -29,6 +33,11 @@ const DifferentIdAttribute = Bb.Model.extend({
   idAttribute: 'number'
 });
 
+
+const SavedModelCollection = Bb.Collection.extend({
+  model: SavedModel,
+  localStorage: new LocalStorage('SavedModelCollection')
+});
 
 describe('LocalStorage Model', function() {
   let mySavedModel;
@@ -53,6 +62,15 @@ describe('LocalStorage Model', function() {
     expect(parsed.string).to.be('String');
     expect(parsed.string2).to.be('String 2');
     expect(parsed.number).to.be(1337);
+  });
+
+  it('can be converted to JSON', function() {
+    expect(mySavedModel.toJSON()).to.eql({
+      string: 'String',
+      id: 10,
+      number: 1337,
+      string2: 'String 2'
+    });
   });
 
   describe('once saved', function() {
@@ -137,12 +155,38 @@ describe('LocalStorage Model', function() {
     });
   });
 
-  it('can be converted to JSON', function() {
-    expect(mySavedModel.toJSON()).to.eql({
-      string: 'String',
-      id: 10,
-      number: 1337,
-      string2: 'String 2'
+  describe('using ajaxSync: true', function() {
+    beforeEach(function() {
+      stub(Bb, 'ajax');
+    });
+
+    afterEach(function() {
+      Bb.ajax.restore();
+    });
+
+    it('calls $.ajax for fetch', function() {
+      mySavedModel.fetch({ajaxSync: true});
+
+      expect(Bb.ajax.called).to.be(true);
+      expect(Bb.ajax.getCall(0).args[0].url).to.be('/test/10');
+      expect(Bb.ajax.getCall(0).args[0].type).to.be('GET');
+    });
+
+    it('calls $.ajax for save', function() {
+      mySavedModel.save({}, {ajaxSync: true});
+
+      expect(Bb.ajax.called).to.be(true);
+      expect(Bb.ajax.getCall(0).args[0].type).to.be('PUT');
+      expect(Bb.ajax.getCall(0).args[0].url).to.be('/test/10');
+
+      const data = JSON.parse(Bb.ajax.getCall(0).args[0].data);
+
+      expect(data).to.eql({
+        string: 'String',
+        string2: 'String 2',
+        number: 1337,
+        id: 10
+      });
     });
   });
 });
