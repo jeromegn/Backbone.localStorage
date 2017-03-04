@@ -8,7 +8,7 @@ const coverageReporters = [{
 
 const reporters = [
   'progress',
-  'coverage'
+  'coverage-istanbul'
 ];
 
 if (process.env.TRAVIS) {
@@ -20,6 +20,11 @@ if (process.env.TRAVIS) {
   reporters.push('coveralls');
 } else {
   console.log('Not on Travis so not sending coveralls');
+  coverageReporters.push({
+    type: 'html',
+    dir: 'coverage',
+    subdir: '.'
+  });
 }
 
 module.exports = function(config) {
@@ -42,7 +47,6 @@ module.exports = function(config) {
 
     // list of files to exclude
     exclude: [
-      // 'node_modules/**/*'
     ],
 
 
@@ -67,6 +71,7 @@ module.exports = function(config) {
           {
             test: /\.js$/,
             include: /src\/.*\.js$/,
+            exclude: /node_modules/,
             loader: 'istanbul-instrumenter-loader',
             enforce: 'post'
           }
@@ -82,7 +87,7 @@ module.exports = function(config) {
           'backbone.localStorage': path.resolve('src/driver.js')
         }
       }
-},
+    },
 
 
     // test results reporter to use
@@ -92,6 +97,11 @@ module.exports = function(config) {
 
     coverageReporter: {
       reporters: coverageReporters
+    },
+
+    coverageIstanbulReporter: {
+      reports: ['text-summary'],
+      fixWebpackSourcePaths: true
     },
 
     // web server port
