@@ -1,7 +1,7 @@
 import root from 'window-or-global';
 import Bb from 'backbone';
 import {LocalStorage} from 'backbone.localStorage';
-import {clone} from 'underscore';
+import {clone, uniq} from 'underscore';
 
 import expect from 'expect.js';
 import {stub} from 'sinon';
@@ -320,6 +320,7 @@ describe('New localStorage model', function() {
   });
 });
 
+
 describe('LocalStorage Collection', function() {
   let mySavedCollection;
 
@@ -341,13 +342,18 @@ describe('LocalStorage Collection', function() {
     const item = clone(attributes);
     item.id = 5;
 
-    mySavedCollection.create(item);
-    mySavedCollection.create(item);
-
-    expect(mySavedCollection.length).to.be(1);
+    const newCollection = new SavedCollection([item]);
+    newCollection.create(item);
+    newCollection.create(item);
     const localItem = root.localStorage.getItem('SavedCollection-5');
+
+    expect(newCollection.length).to.be(1);
     expect(JSON.parse(localItem).id).to.be(5);
+
+    const records = newCollection.localStorage.records;
+    expect(uniq(records)).to.eql(records);
   });
+
 
   describe('pulling from localStorage', function() {
     let model;
