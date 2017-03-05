@@ -1,6 +1,7 @@
 import root from 'window-or-global';
 import Bb from 'backbone';
 import {LocalStorage} from 'backbone.localStorage';
+import {clone} from 'underscore';
 
 import expect from 'expect.js';
 import {stub} from 'sinon';
@@ -239,6 +240,32 @@ describe('Model with different idAttribute', function() {
 });
 
 
+describe('New localStorage model', function() {
+  let mySavedModel;
+
+  beforeEach(function() {
+    mySavedModel = new SavedModel();
+  });
+
+  afterEach(function() {
+    root.localStorage.clear();
+    mySavedModel = null;
+  });
+
+  it('creates a new item in localStorage', function() {
+    mySavedModel.save({
+      data: 'value'
+    });
+
+    const itemId = mySavedModel.id;
+    const item = root.localStorage.getItem(`SavedModel-${itemId}`);
+
+    const parsed = JSON.parse(item);
+
+    expect(parsed).to.eql(mySavedModel.attributes);
+  });
+});
+
 describe('LocalStorage Collection', function() {
   let mySavedCollection;
 
@@ -254,6 +281,18 @@ describe('LocalStorage Collection', function() {
   it('saves to localStorage', function() {
     mySavedCollection.create(attributes);
     expect(mySavedCollection.length).to.be(1);
+  });
+
+  it('cannot duplicate id in localStorage', function() {
+    const item = clone(attributes);
+    item.id = 5;
+
+    mySavedCollection.create(item);
+    mySavedCollection.create(item);
+
+    expect(mySavedCollection.length).to.be(1);
+    const localItem = root.localStorage.getItem('SavedCollection-5');
+    expect(JSON.parse(localItem).id).to.be(5);
   });
 
   describe('pulling from localStorage', function() {

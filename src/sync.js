@@ -54,7 +54,6 @@ export function sync(method, model, options = {}) {
   }
 
   if (resp) {
-    console.log(resp);
     if (options.success) {
       options.success.call(model, resp, options);
     }
