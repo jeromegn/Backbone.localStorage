@@ -204,6 +204,60 @@ describe('LocalStorage Model', function() {
       });
     });
   });
+
+  describe('using $.Deferred', function() {
+    const deferredResolver = {
+      resolve: stub(),
+      promise: stub()
+    };
+    const $Deferred = Bb.$.Deferred;
+
+    function deferred() {
+      return deferredResolver;
+    }
+    beforeEach(function() {
+      Bb.$.Deferred = deferred;
+    });
+
+    afterEach(function() {
+      Bb.$.Deferred = $Deferred;
+    });
+
+    it('resolves the deferred promise', function() {
+      mySavedModel.save();
+      expect(deferredResolver.resolve.called).to.be(true);
+      expect(deferredResolver.promise.called).to.be(true);
+    });
+  });
+
+  describe('using Backbone.Deferred', function() {
+    const deferredResolver = {
+      resolve: stub(),
+      promise: stub()
+    };
+    const $ = Bb.$;
+    const Deferred = Bb.Deferred;
+
+    function deferred() {
+      return deferredResolver;
+    }
+
+    before(function() {
+      Bb.$ = undefined;
+      Bb.Deferred = deferred;
+    });
+
+    after(function() {
+      Bb.$ = $;
+      Bb.Deferred = Deferred;
+    });
+
+    it('resolves the deferred promise', function() {
+      mySavedModel.save();
+      expect(deferredResolver.resolve.called).to.be(true);
+      expect(deferredResolver.promise.called).to.be(true);
+    });
+  });
 });
 
 
