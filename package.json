@@ -56,5 +56,5 @@
     "cache",
     "sync"
   ],
-  "main": "./build/backbone.localstorage.js"
+  "main": "build/backbone.localStorage.js"
 }
