@@ -1,5 +1,9 @@
 # Backbone localStorage Backend
 
+[![Build Status](https://travis-ci.org/jeromegn/Backbone.localStorage.svg?branch=master)](https://travis-ci.org/jeromegn/Backbone.localStorage)
+[![Coverage Status](https://coveralls.io/repos/github/jeromegn/Backbone.localStorage/badge.svg?branch=master)](https://coveralls.io/github/jeromegn/Backbone.localStorage?branch=master)
+[![npm version](https://badge.fury.io/js/backbone.localstorage.svg)](https://badge.fury.io/js/backbone.localstorage)
+
 An adapter that replaces `Backbone.sync` to save to `window.localStorage`
 instead of to the server.
 
@@ -90,7 +94,5 @@ Install NodeJS and run `yarn` or `npm i` to get your dependencies, then:
 
 ## Acknowledgments
 
-- [Mark Woodall](https://github.com/llad): Initial tests (now refactored);
-- [Martin Häcker](https://github.com/dwt): Many fixes and the test isolation.
-- [Mark Woodall](https://github.com/llad): initial tests (now refactored);
-- [Martin Häcker](https://github.com/dwt): many fixes and the test isolation.
+- [Mark Woodall](https://github.com/llad): Initial tests (now refactored)
+- [Martin Häcker](https://github.com/dwt): Many fixes and the test isolation

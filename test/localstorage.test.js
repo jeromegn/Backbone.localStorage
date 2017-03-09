@@ -1,6 +1,7 @@
 import root from 'window-or-global';
 import Bb from 'backbone';
 import {LocalStorage} from 'backbone.localStorage';
+import {clone, uniq} from 'underscore';
 
 import expect from 'expect.js';
 import {stub} from 'sinon';
@@ -66,6 +67,18 @@ describe('LocalStorage Model', function() {
     });
   });
 
+  describe('if not saved', function() {
+    it('will pass error callbacks from fetch', function(done) {
+      mySavedModel.fetch({
+        error(model, resp) {
+          expect(model).to.equal(mySavedModel);
+          expect(resp).to.equal('Record Not Found');
+          done();
+        }
+      });
+    });
+  });
+
   describe('once saved', function() {
     beforeEach(function() {
       mySavedModel.save();
@@ -85,6 +98,15 @@ describe('LocalStorage Model', function() {
       expect(newModel.get('string')).to.be('String');
       expect(newModel.get('string2')).to.be('String 2');
       expect(newModel.get('number')).to.be(1337);
+    });
+
+    it('passes fetch calls to success', function(done) {
+      mySavedModel.fetch({
+        success(model, response, options) {
+          expect(model).to.equal(mySavedModel);
+          done();
+        }
+      });
     });
 
     it('can be updated', function() {
@@ -182,6 +204,60 @@ describe('LocalStorage Model', function() {
       });
     });
   });
+
+  describe('using $.Deferred', function() {
+    const deferredResolver = {
+      resolve: stub(),
+      promise: stub()
+    };
+    const $Deferred = Bb.$.Deferred;
+
+    function deferred() {
+      return deferredResolver;
+    }
+    beforeEach(function() {
+      Bb.$.Deferred = deferred;
+    });
+
+    afterEach(function() {
+      Bb.$.Deferred = $Deferred;
+    });
+
+    it('resolves the deferred promise', function() {
+      mySavedModel.save();
+      expect(deferredResolver.resolve.called).to.be(true);
+      expect(deferredResolver.promise.called).to.be(true);
+    });
+  });
+
+  describe('using Backbone.Deferred', function() {
+    const deferredResolver = {
+      resolve: stub(),
+      promise: stub()
+    };
+    const $ = Bb.$;
+    const Deferred = Bb.Deferred;
+
+    function deferred() {
+      return deferredResolver;
+    }
+
+    before(function() {
+      Bb.$ = undefined;
+      Bb.Deferred = deferred;
+    });
+
+    after(function() {
+      Bb.$ = $;
+      Bb.Deferred = Deferred;
+    });
+
+    it('resolves the deferred promise', function() {
+      mySavedModel.save();
+      expect(deferredResolver.resolve.called).to.be(true);
+      expect(deferredResolver.promise.called).to.be(true);
+    });
+  });
 });
 
 
@@ -211,9 +287,36 @@ describe('Model with different idAttribute', function() {
     const newModel = new DifferentIdAttribute({number: 1337});
 
     newModel.fetch();
-    Bb.sync('read', newModel, {});
+
     expect(newModel.id).to.be(1337);
     expect(newModel.get('string')).to.be('String');
+  });
+});
+
+
+describe('New localStorage model', function() {
+  let mySavedModel;
+
+  beforeEach(function() {
+    mySavedModel = new SavedModel();
+  });
+
+  afterEach(function() {
+    root.localStorage.clear();
+    mySavedModel = null;
+  });
+
+  it('creates a new item in localStorage', function() {
+    mySavedModel.save({
+      data: 'value'
+    });
+
+    const itemId = mySavedModel.id;
+    const item = root.localStorage.getItem(`SavedModel-${itemId}`);
+
+    const parsed = JSON.parse(item);
+
+    expect(parsed).to.eql(mySavedModel.attributes);
   });
 });
 
@@ -234,6 +337,23 @@ describe('LocalStorage Collection', function() {
     mySavedCollection.create(attributes);
     expect(mySavedCollection.length).to.be(1);
   });
+
+  it('cannot duplicate id in localStorage', function() {
+    const item = clone(attributes);
+    item.id = 5;
+
+    const newCollection = new SavedCollection([item]);
+    newCollection.create(item);
+    newCollection.create(item);
+    const localItem = root.localStorage.getItem('SavedCollection-5');
+
+    expect(newCollection.length).to.be(1);
+    expect(JSON.parse(localItem).id).to.be(5);
+
+    const records = newCollection.localStorage.records;
+    expect(uniq(records)).to.eql(records);
+  });
+
 
   describe('pulling from localStorage', function() {
     let model;

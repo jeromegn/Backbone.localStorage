@@ -501,12 +501,9 @@ function sync(method, model) {
   }
 
   if (resp) {
-    if (options && options.success) {
-      if (_backbone2.default.VERSION === '0.9.10') {
-        options.success(model, resp, options);
-      } else {
-        options.success(resp);
-      }
+    console.log(resp);
+    if (options.success) {
+      options.success.call(model, resp, options);
     }
     if (syncDfd) {
       syncDfd.resolve(resp);
@@ -514,14 +511,9 @@ function sync(method, model) {
   } else {
     errorMessage = errorMessage ? errorMessage : 'Record Not Found';
 
-    if (options && options.error) {
-      if (_backbone2.default.VERSION === '0.9.10') {
-        options.error(model, errorMessage, options);
-      } else {
-        options.error(errorMessage);
-      }
+    if (options.error) {
+      options.error.call(model, errorMessage, options);
     }
-
     if (syncDfd) {
       syncDfd.reject(errorMessage);
     }
@@ -529,8 +521,8 @@ function sync(method, model) {
 
   // add compatibility with $.ajax
   // always execute callback for success and error
-  if (options && options.complete) {
-    options.complete(resp);
+  if (options.complete) {
+    options.complete.call(model, resp);
   }
 
   return syncDfd && syncDfd.promise();
