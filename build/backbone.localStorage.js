@@ -501,7 +501,6 @@ function sync(method, model) {
   }
 
   if (resp) {
-    console.log(resp);
     if (options.success) {
       options.success.call(model, resp, options);
     }
