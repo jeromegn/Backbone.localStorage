@@ -1,7 +1,7 @@
 {
   "author": "Scott Walton <s@cott.me.uk>",
   "name": "backbone.localstorage",
-  "version": "2.0.0-alpha.2",
+  "version": "2.0.0-alpha.3",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -45,6 +45,7 @@
     "compile": "webpack -p",
     "debug": "test",
     "lint": "eslint src test",
+    "package": "npm run build && npm run compile",
     "test": "karma start --single-run && eslint src test",
     "watch": "karma start"
   },
