@@ -2,7 +2,7 @@
   "name": "backbone.localStorage",
   "main": "./backbone.localStorage.js",
   "dependencies": {
-    "backbone": "~1.x.x"
+    "backbone": "~1"
   },
   "ignore": [
     "examples",
