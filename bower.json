@@ -1,8 +1,8 @@
 {
   "name": "backbone.localStorage",
-  "main": "./backbone.localStorage.js",
+  "main": "./build/backbone.localStorage.js",
   "dependencies": {
-    "backbone": "~1.x.x"
+    "backbone": "1.3.3"
   },
   "ignore": [
     "examples",
@@ -11,6 +11,7 @@
     ".documentup.json",
     ".travis.yml",
     "CNAME",
-    "Makefile"
+    "Makefile",
+    "test"
   ]
 }
