@@ -159,6 +159,12 @@ var _utils = __webpack_require__(0);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+// const root = getWindow();
+
+// if (root.Backbone) {
+//   root.Backbone.LocalStorage = LocalStorage;
+// }
+
 _backbone2.default.LocalStorage = _localstorage.LocalStorage;
 var ajaxSync = _backbone2.default.sync;
 
