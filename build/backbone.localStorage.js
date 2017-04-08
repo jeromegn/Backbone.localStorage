@@ -1,5 +1,14 @@
-module.exports =
-/******/ (function(modules) { // webpackBootstrap
+(function webpackUniversalModuleDefinition(root, factory) {
+	if(typeof exports === 'object' && typeof module === 'object')
+		module.exports = factory(require("underscore"), require("backbone"));
+	else if(typeof define === 'function' && define.amd)
+		define([, ], factory);
+	else if(typeof exports === 'object')
+		exports["Backbone.LocalStorage"] = factory(require("underscore"), require("backbone"));
+	else
+		root["Backbone.LocalStorage"] = factory(root["_"], root["Backbone"]);
+})(this, function(__WEBPACK_EXTERNAL_MODULE_1__, __WEBPACK_EXTERNAL_MODULE_2__) {
+return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 
@@ -118,13 +127,13 @@ function getWindow() {
 /* 1 */
 /***/ (function(module, exports) {
 
-module.exports = require("underscore");
+module.exports = __WEBPACK_EXTERNAL_MODULE_1__;
 
 /***/ }),
 /* 2 */
 /***/ (function(module, exports) {
 
-module.exports = require("backbone");
+module.exports = __WEBPACK_EXTERNAL_MODULE_2__;
 
 /***/ }),
 /* 3 */
@@ -563,3 +572,4 @@ module.exports = __webpack_require__(3);
 
 /***/ })
 /******/ ]);
+});

@@ -13,8 +13,16 @@ module.exports = {
     app: ['./src/driver.js']
   },
   externals: {
-    backbone: true,
-    underscore: true
+    backbone: {
+      commonjs: 'backbone',
+      commonjs2: 'backbone',
+      root: 'Backbone'
+    },
+    underscore: {
+      commonjs: 'underscore',
+      commonjs2: 'underscore',
+      root: '_'
+    }
   },
   module: {
     loaders: [
@@ -31,7 +39,7 @@ module.exports = {
   output: {
     filename: `backbone.localStorage${isProd ? '.min' : ''}.js`,
     path: path.resolve('build'),
-    library: 'backbone.localStorage',
-    libraryTarget: 'commonjs2'
+    library: 'Backbone.LocalStorage',
+    libraryTarget: 'umd'
   }
 };
