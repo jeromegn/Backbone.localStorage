@@ -22,7 +22,7 @@ const defaultSerializer = {
   deserialize(data) {
     return data && JSON.parse(data);
   }
-}
+};
 
 /** LocalStorage proxy class for Backbone models.
  * Usage:
@@ -36,7 +36,7 @@ export class LocalStorage {
     this.serializer = serializer;
 
     if (!this.localStorage) {
-      throw 'Backbone.localStorage: Environment does not support localStorage.'
+      throw 'Backbone.localStorage: Environment does not support localStorage.';
     }
 
     const store = this._getItem(this.name);
@@ -47,7 +47,7 @@ export class LocalStorage {
    * @returns {Object} Local Storage reference.
   */
   localStorage() {
-    return getWindow().localStorage
+    return getWindow().localStorage;
   }
 
   /** Save the current status to localStorage

@@ -17,7 +17,7 @@ function getSyncMethod(model, options = {}) {
   const forceAjaxSync = options.ajaxSync;
   const hasLocalStorage = getLocalStorage(model);
 
-  return !forceAjaxSync && hasLocalStorage ? localSync : ajaxSync
+  return !forceAjaxSync && hasLocalStorage ? localSync : ajaxSync;
 }
 
 

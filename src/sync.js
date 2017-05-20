@@ -1,7 +1,7 @@
 import Bb from 'backbone';
 import {isUndefined, result} from 'underscore';
 
-import {getLocalStorage} from './utils'
+import {getLocalStorage} from './utils';
 
 
 /** Get the Deferred status from $ if we have jQuery, otherwise use Backbone's

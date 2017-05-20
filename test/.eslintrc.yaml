@@ -74,7 +74,8 @@ rules:
     - 2
     - single
   semi:
-    - error
+    - 2
+    - always
   space-before-blocks:
     - 2
     - always
