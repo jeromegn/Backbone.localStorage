@@ -44,7 +44,8 @@
     "ci": "karma start --single-run --browsers Firefox",
     "compile": "webpack -p",
     "debug": "test",
-    "lint": "eslint src test",
+    "fix": "eslint --fix .",
+    "lint": "eslint .",
     "package": "npm run build && npm run compile",
     "test": "karma start --single-run && eslint src test",
     "watch": "karma start"
