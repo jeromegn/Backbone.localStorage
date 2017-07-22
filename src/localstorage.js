@@ -1,6 +1,6 @@
-import {chain, contains, isObject, without} from 'underscore';
+import { chain, contains, isObject, without } from 'underscore';
 
-import {getWindow, guid} from './utils';
+import { getWindow, guid } from './utils';
 
 
 /** The default serializer for transforming your saved data to localStorage */
@@ -104,8 +104,8 @@ export class LocalStorage {
   findAll() {
     return chain(this.records).map(
       id => this.serializer.deserialize(this._getItem(this._itemName(id)))
-      ).filter(
-        item => item != null).value();
+    ).filter(
+      item => item != null).value();
   }
 
   /** Delete a model from `this.data`, returning it.

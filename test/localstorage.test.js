@@ -1,10 +1,10 @@
 import root from 'window-or-global';
 import Bb from 'backbone';
-import {LocalStorage} from 'backbone.localStorage';
-import {clone, uniq} from 'underscore';
+import { LocalStorage } from 'backbone.localStorage';
+import { clone, uniq } from 'underscore';
 
 import expect from 'expect.js';
-import {stub} from 'sinon';
+import { stub } from 'sinon';
 
 const attributes = {
   string: 'String',
@@ -145,7 +145,7 @@ describe('LocalStorage Model', function() {
       mySavedModel.save({
         string: 'New String',
         number2: 1234
-      }, {patch: true});
+      }, { patch: true });
 
       const item = root.localStorage.getItem(`SavedModel-${mySavedModel.id}`);
 
@@ -204,7 +204,7 @@ describe('LocalStorage Model', function() {
     });
 
     it('calls $.ajax for fetch', function() {
-      mySavedModel.fetch({ajaxSync: true});
+      mySavedModel.fetch({ ajaxSync: true });
 
       expect(Bb.ajax.called).to.be(true);
       expect(Bb.ajax.getCall(0).args[0].url).to.be('/test/10');
@@ -212,7 +212,7 @@ describe('LocalStorage Model', function() {
     });
 
     it('calls $.ajax for save', function() {
-      mySavedModel.save({}, {ajaxSync: true});
+      mySavedModel.save({}, { ajaxSync: true });
 
       expect(Bb.ajax.called).to.be(true);
       expect(Bb.ajax.getCall(0).args[0].type).to.be('PUT');
@@ -308,7 +308,7 @@ describe('Model with different idAttribute', function() {
 
   it('fetches using the new value', function() {
     root.localStorage.setItem('DifferentId-1337', JSON.stringify(attributes));
-    const newModel = new DifferentIdAttribute({number: 1337});
+    const newModel = new DifferentIdAttribute({ number: 1337 });
 
     newModel.fetch();
 

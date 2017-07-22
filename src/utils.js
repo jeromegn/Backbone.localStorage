@@ -1,4 +1,4 @@
-import {isUndefined, result} from 'underscore';
+import { isUndefined, result } from 'underscore';
 
 /** Generates 4 random hex digits
  * @returns {string} 4 Random hex digits

@@ -1,8 +1,8 @@
 import Backbone from 'backbone';
 
-import {LocalStorage} from './localstorage';
-import {sync as localSync} from './sync';
-import {getLocalStorage} from './utils';
+import { LocalStorage } from './localstorage';
+import { sync as localSync } from './sync';
+import { getLocalStorage } from './utils';
 
 
 Backbone.LocalStorage = LocalStorage;
@@ -25,4 +25,4 @@ Backbone.sync = function(method, model, options) {
   return getSyncMethod(model, options).apply(this, [method, model, options]);
 };
 
-export {LocalStorage};
+export { LocalStorage };
