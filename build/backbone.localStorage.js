@@ -2,7 +2,7 @@
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory(require("underscore"), require("backbone"));
 	else if(typeof define === 'function' && define.amd)
-		define([, ], factory);
+		define(["backbone", "backbone"], factory);
 	else if(typeof exports === 'object')
 		exports["Backbone.LocalStorage"] = factory(require("underscore"), require("backbone"));
 	else

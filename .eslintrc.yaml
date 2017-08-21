@@ -1,7 +1,5 @@
 ---
 parser: babel-eslint
-ecmaVersion: 7
-sourceType: browser
 parserOptions:
   ecmaFeatures:
     modules: true
@@ -70,18 +68,25 @@ rules:
     - args: none
   no-var: 2
   no-with: 2
+  object-curly-spacing:
+    - error
+    - always
   object-shorthand:
-    - 2
-    - methods
+    - error
+    - always
+    - avoidQuotes: true
   operator-linebreak:
     - 2
     - after
   quotes:
     - 2
     - single
+  semi:
+    - 2
+    - always
   space-before-blocks:
-      - 2
-      - always
+    - 2
+    - always
   space-before-function-paren:
     - 2
     - never

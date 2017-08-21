@@ -1,6 +1,6 @@
-import {chain, contains, isObject, without} from 'underscore';
+import { chain, contains, isObject, without } from 'underscore';
 
-import {getWindow, guid} from './utils';
+import { getWindow, guid } from './utils';
 
 
 /** The default serializer for transforming your saved data to localStorage */
@@ -22,7 +22,7 @@ const defaultSerializer = {
   deserialize(data) {
     return data && JSON.parse(data);
   }
-}
+};
 
 /** LocalStorage proxy class for Backbone models.
  * Usage:
@@ -36,7 +36,7 @@ export class LocalStorage {
     this.serializer = serializer;
 
     if (!this.localStorage) {
-      throw 'Backbone.localStorage: Environment does not support localStorage.'
+      throw 'Backbone.localStorage: Environment does not support localStorage.';
     }
 
     const store = this._getItem(this.name);
@@ -47,7 +47,7 @@ export class LocalStorage {
    * @returns {Object} Local Storage reference.
   */
   localStorage() {
-    return getWindow().localStorage
+    return getWindow().localStorage;
   }
 
   /** Save the current status to localStorage
@@ -104,8 +104,8 @@ export class LocalStorage {
   findAll() {
     return chain(this.records).map(
       id => this.serializer.deserialize(this._getItem(this._itemName(id)))
-      ).filter(
-        item => item != null).value();
+    ).filter(
+      item => item != null).value();
   }
 
   /** Delete a model from `this.data`, returning it.

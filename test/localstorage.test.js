@@ -1,10 +1,10 @@
 import root from 'window-or-global';
 import Bb from 'backbone';
-import {LocalStorage} from 'backbone.localStorage';
-import {clone, uniq} from 'underscore';
+import { LocalStorage } from 'backbone.localStorage';
+import { clone, uniq } from 'underscore';
 
 import expect from 'expect.js';
-import {stub} from 'sinon';
+import { stub } from 'sinon';
 
 const attributes = {
   string: 'String',
@@ -145,7 +145,7 @@ describe('LocalStorage Model', function() {
       mySavedModel.save({
         string: 'New String',
         number2: 1234
-      }, {patch: true});
+      }, { patch: true });
 
       const item = root.localStorage.getItem(`SavedModel-${mySavedModel.id}`);
 
@@ -170,6 +170,30 @@ describe('LocalStorage Model', function() {
     });
   });
 
+  describe('with storage updated from elsewhere', function() {
+    let newModel;
+    beforeEach(function() {
+      newModel = new SavedModel({
+        id: 10
+      });
+      newModel.fetch();
+      mySavedModel.save({
+        string: 'Brand new string'
+      });
+    });
+
+    afterEach(function() {
+      root.localStorage.clear();
+      newModel = null;
+    });
+
+    it('will re-fetch new data', function() {
+      newModel.fetch();
+
+      expect(newModel.get('string')).to.eql('Brand new string');
+    });
+  });
+
   describe('using ajaxSync: true', function() {
     beforeEach(function() {
       stub(Bb, 'ajax');
@@ -180,7 +204,7 @@ describe('LocalStorage Model', function() {
     });
 
     it('calls $.ajax for fetch', function() {
-      mySavedModel.fetch({ajaxSync: true});
+      mySavedModel.fetch({ ajaxSync: true });
 
       expect(Bb.ajax.called).to.be(true);
       expect(Bb.ajax.getCall(0).args[0].url).to.be('/test/10');
@@ -188,7 +212,7 @@ describe('LocalStorage Model', function() {
     });
 
     it('calls $.ajax for save', function() {
-      mySavedModel.save({}, {ajaxSync: true});
+      mySavedModel.save({}, { ajaxSync: true });
 
       expect(Bb.ajax.called).to.be(true);
       expect(Bb.ajax.getCall(0).args[0].type).to.be('PUT');
@@ -284,7 +308,7 @@ describe('Model with different idAttribute', function() {
 
   it('fetches using the new value', function() {
     root.localStorage.setItem('DifferentId-1337', JSON.stringify(attributes));
-    const newModel = new DifferentIdAttribute({number: 1337});
+    const newModel = new DifferentIdAttribute({ number: 1337 });
 
     newModel.fetch();
 
@@ -397,6 +421,32 @@ describe('LocalStorage Collection', function() {
 
       expect(removed).to.be(null);
       expect(mySavedCollection.length).to.be(0);
+    });
+  });
+
+  describe('will fetch from localStorage if updated separately', function() {
+    let newCollection = null;
+
+    beforeEach(function() {
+      mySavedCollection.create(attributes);
+      newCollection = new SavedCollection();
+      newCollection.fetch();
+    });
+
+    afterEach(function() {
+      newCollection = null;
+    });
+
+    it('fetches the items from the original collection', function() {
+      expect(newCollection.length).to.equal(1);
+    });
+
+    it('will update future changes', function() {
+      const newAttributes = clone(attributes);
+      newAttributes.number = 1338;
+      mySavedCollection.create(newAttributes);
+      newCollection.fetch();
+      expect(newCollection.length).to.equal(2);
     });
   });
 });
