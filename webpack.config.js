@@ -14,11 +14,13 @@ module.exports = {
   },
   externals: {
     backbone: {
+      amd: 'backbone',
       commonjs: 'backbone',
       commonjs2: 'backbone',
       root: 'Backbone'
     },
     underscore: {
+      amd: 'backbone',
       commonjs: 'underscore',
       commonjs2: 'underscore',
       root: '_'
