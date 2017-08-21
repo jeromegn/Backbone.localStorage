@@ -1,7 +1,7 @@
 {
   "author": "Scott Walton <s@cott.me.uk>",
   "name": "backbone.localstorage",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -50,13 +50,6 @@
     "test": "karma start --single-run && eslint src test",
     "watch": "karma start"
   },
-  "keywords": [
-    "backbone",
-    "localstorage",
-    "local",
-    "storage",
-    "cache",
-    "sync"
-  ],
+  "keywords": ["backbone", "localstorage", "local", "storage", "cache", "sync"],
   "main": "build/backbone.localStorage.js"
 }
