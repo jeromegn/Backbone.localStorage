@@ -20,7 +20,7 @@ module.exports = {
       root: 'Backbone'
     },
     underscore: {
-      amd: 'backbone',
+      amd: 'underscore',
       commonjs: 'underscore',
       commonjs2: 'underscore',
       root: '_'
