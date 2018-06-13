@@ -349,6 +349,7 @@ describe('LocalStorage Collection', function() {
   let mySavedCollection;
 
   beforeEach(function() {
+    root.localStorage.clear();
     mySavedCollection = new SavedCollection();
   });
 
@@ -447,6 +448,26 @@ describe('LocalStorage Collection', function() {
       mySavedCollection.create(newAttributes);
       newCollection.fetch();
       expect(newCollection.length).to.equal(2);
+    });
+  });
+
+  describe('has a list of ids in localStorage', function() {
+
+    it('will update the list in localStorage when an item is destroyed.', function() {
+
+      let item = clone(attributes);
+      item.id = 5;
+      mySavedCollection.create(item);
+
+      const newModel = mySavedCollection.get(5);
+      newModel.destroy();
+
+      const localItemRemoved = root.localStorage.getItem('SavedCollection-5');
+      const collectionIdsFromLocalStorage = root.localStorage.getItem('SavedCollection');
+      const idsArray = collectionIdsFromLocalStorage.split(',');
+      expect(localItemRemoved).to.be(null);
+      expect(mySavedCollection.records).to.be(undefined);
+      expect(idsArray).to.not.contain('5');
     });
   });
 });
