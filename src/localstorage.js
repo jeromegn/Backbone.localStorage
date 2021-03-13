@@ -114,7 +114,7 @@ export class LocalStorage {
   */
   destroy(model) {
     this._removeItem(this._itemName(model.id));
-    const newRecords = without(this.records, model);
+    const newRecords = without(this.records, model.id.toString());
 
     this.records = newRecords;
     this.save();
