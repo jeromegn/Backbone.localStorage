@@ -422,6 +422,16 @@ describe('LocalStorage Collection', function() {
       expect(removed).to.be(null);
       expect(mySavedCollection.length).to.be(0);
     });
+
+    it('cleans up localStorage after destroying a model', function() {
+      const parsed = JSON.parse(item);
+      expect(localStorage.getItem('SavedCollection').split(',')).to.contain(parsed.id);
+
+      const newModel = mySavedCollection.get(parsed.id);
+      newModel.destroy();
+
+      expect(localStorage.getItem('SavedCollection').split(',')).to.not.contain(parsed.id);
+    });
   });
 
   describe('will fetch from localStorage if updated separately', function() {

@@ -345,7 +345,7 @@ var LocalStorage = exports.LocalStorage = function () {
     key: 'destroy',
     value: function destroy(model) {
       this._removeItem(this._itemName(model.id));
-      var newRecords = (0, _underscore.without)(this.records, model);
+      var newRecords = (0, _underscore.without)(this.records, model.id.toString());
 
       this.records = newRecords;
       this.save();
