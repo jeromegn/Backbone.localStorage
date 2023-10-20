@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.2.0 - Oct 20, 2023
+
+- Updated underscore version
+
 ## 1.1.16 - January 22, 2015
 
 - Fix for #130. Uncaught TypeError: Cannot read property 'localStorage' of undefined
